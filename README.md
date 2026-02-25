@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MaxInTec Corporate Website
 
-## Getting Started
+Modern corporate landing page developed for MaxInTec, a security and technology company based in Santa Catarina, Brazil.
 
-First, run the development server:
+This project is the foundation of a scalable institutional platform that will evolve into a complete corporate website.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Next.js
+- React
+- Tailwind CSS
+- Responsive Design
+- Optimized video background
+- WhatsApp integration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🎯 Current Features
 
-To learn more about Next.js, take a look at the following resources:
+- Hero section with full-screen video background
+- Call-to-action with WhatsApp integration
+- Modern and clean UI
+- Responsive layout
+- Performance-oriented structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📈 Roadmap (Next Steps)
 
-## Deploy on Vercel
+- Additional institutional pages (About, Services, Contact)
+- SEO optimization improvements
+- Blog section
+- Contact form with backend integration
+- Performance improvements and accessibility adjustments
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 💡 Purpose
+
+The goal of this project is to build a high-quality corporate website focused on:
+
+- Brand positioning
+- Lead generation
+- Modern web standards
+- Scalability for future features
