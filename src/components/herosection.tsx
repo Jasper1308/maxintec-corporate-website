@@ -28,7 +28,7 @@ export default function HeroSection() {
               <h2 className="text-white mb-5 text-2xl font-bold">Segurança, Conforto e Tecnologia <br />de Alto Padrão para Empresas, <br />Residências e Condomínios em SC</h2>
               <p className="text-white">Câmeras, alarmes, monitoramento 24h, controle de acesso facial, <br />portaria remota e autônoma. Atendimento imediato em Blumenau, <br />Litoral Norte e região</p>
               <div className="mt-5 border-1 border-white rounded-[2rem] p-3 inline-block bg-green-600 hover:bg-green-700 transition duration-200 cursor-pointer hover:scale-115">
-                <a href="https://wa.me/554733390678" className="flex text-black text-xs font-bold gap-1">
+                <a href="https://web.whatsapp.com/send/?phone=554733390678&text&type=phone_number&app_absent=0" className="flex text-black text-xs font-bold gap-1">
                   <img src="whatsapp.png" alt="Whatsapp" className="h-4"/>
                   FALE AGORA
                 </a>
