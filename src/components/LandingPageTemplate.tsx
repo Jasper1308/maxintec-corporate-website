@@ -12,7 +12,7 @@ export default function LandingPageTemplate({
     image
 }: LandingProps) {
     return (
-        <section className="relative h-screen w-full overflow-hidden">
+        <section className="relative min-h-screen overflow-hidden py-16">
 
             <video
                 autoPlay
@@ -26,31 +26,41 @@ export default function LandingPageTemplate({
 
             <div className="absolute inset-0 bg-black/60"></div>
 
-            <div className="relative z-10 mt-10 px-50">
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 ">
                 <img
                     src="/maxinteclogo.webp"
                     alt="Error"
-                    className="h-12 w-auto"
+                    className="h-12 w-auto max-lg:mx-auto"
                 />
-                <div className="flex">
-                    <div>
-                        <div className="mt-25 mb-10 border-1 border-white rounded-[4rem] p-4 inline-block">
+                <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-16 lg:gap-16">
+                    <div >
+                        <div className="mt-25 mb-10 border-1 border-white rounded-[4rem] p-4 inline-block max-lg:w-full max-lg:text-center">
                             <h1 className="text-white text-base font-bold">{title}</h1>
                         </div>
-                        <h2 className="whitespace-pre-line text-white mb-5 text-2xl font-bold">{subtitle}</h2>
-                        <p className="whitespace-pre-line text-white">{description}</p>
-                        <div className="mt-5 border-1 border-white rounded-[2rem] p-3 inline-block bg-green-600 hover:bg-green-700 transition duration-200 cursor-pointer hover:scale-115">
-                            <a href="https://web.whatsapp.com/send/?phone=554733390678&text&type=phone_number&app_absent=0" className="flex text-black text-xs font-bold gap-1">
-                                <img src="whatsapp.png" alt="Whatsapp" className="h-4" />
+                        <h2 className="whitespace-pre-line text-white mb-6 font-bold leading-tight
+                                        text-[clamp(1.8rem,3vw,2rem)]
+                                        max-lg:text-center">{subtitle}</h2>
+                        <p className="whitespace-pre-line text-white max-lg:w-full max-lg:text-center text-[clamp(0.5rem,3.5vw,1rem)]">{description}</p>
+                        <div className="mt-5 border border-white rounded-[2rem] p-3 inline-block 
+                                      bg-green-600 hover:bg-green-700 transition duration-200 
+                                        cursor-pointer hover:scale-115 flex-1 flex justify-center
+                                        max-lg:w-full max-lg:text-center">
+
+                            <a
+                                href="https://web.whatsapp.com/send/?phone=554733390678&text&type=phone_number&app_absent=0"
+                                className="flex text-black text-xs font-bold gap-1 max-lg:justify-center max-lg:text-base max-lg:py-4"
+                            >
+                                <img src="whatsapp.png" alt="Whatsapp" className="h-4 max-lg:h-5" />
                                 FALE AGORA
                             </a>
+
                         </div>
                     </div>
                     <div>
                         <img
                             src={image}
                             alt="ERROR"
-                            className="h-100 ml-20 [mask-image:linear-gradient(to_bottom,black_80%,transparent)]"
+                            className="mt-15 hidden lg:block w-[clamp(360px,50vw,650px)] [mask-image:linear-gradient(to_bottom,black_80%,transparent)]"
                         />
                     </div>
                 </div>
