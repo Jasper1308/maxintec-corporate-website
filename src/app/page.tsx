@@ -1,9 +1,8 @@
-import HeroSection from "../components/herosection";
 import LandingPageTemplate from "../components/LandingPageTemplate";
-import { landingContent } from "../data/landingContent";
+import { heroContent } from "../data/heroContent";
 
 export default function Home() {
   return (
-      <LandingPageTemplate {...landingContent.standard} />
+      <LandingPageTemplate content={heroContent.standard}/>
   );
 }
