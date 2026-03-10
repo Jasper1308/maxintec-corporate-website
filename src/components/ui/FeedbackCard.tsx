@@ -1,4 +1,4 @@
-type CardProps = {
+type FeedbackCardProps = {
     name: string;
     role: string;
     stars: number;
@@ -6,13 +6,13 @@ type CardProps = {
     image: string;
 }
 
-export default function Card({
+export default function FeedbackCard({
     name,
     role,
     stars,
     text,
     image,
-}: CardProps) {
+}: FeedbackCardProps) {
     return (
         <div className="bg-[#1e3a5f] rounded-[1rem] p-8 flex flex-col items-center shadow-2xl">
             <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden mb-4">

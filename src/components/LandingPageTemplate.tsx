@@ -1,5 +1,6 @@
 import HeroSection from "./HeroSection";
 import TestimonialsSection from "./Testimonials";
+import Soluctions from "./Soluctions"
 
 type TemplateProps = {
   content: {
@@ -14,6 +15,7 @@ export default function LandingPageTemplate({ content }: TemplateProps) {
     return(
         <main>
             <HeroSection {...content}/>
+            <Soluctions />
             <TestimonialsSection />
         </main>
     )

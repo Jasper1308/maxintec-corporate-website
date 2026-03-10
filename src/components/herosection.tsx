@@ -1,4 +1,5 @@
 import WhatsAppButton from "./ui/WhatsAppButton";
+import SectionTag from "./ui/SectionTag";
 
 type HeroProps = {
   title: string;
@@ -23,11 +24,14 @@ export default function HeroSection({
           loop
           muted
           playsInline
+          aria-hidden="true"
+          tabIndex={-1}
+          poster="/videos/bg-poster.jpg"
           className="h-full w-full object-cover"
         >
           <source src="/videos/bg.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/75" />
+        <div className="absolute inset-0 bg-blue-800/15" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-12 w-full">
@@ -36,7 +40,7 @@ export default function HeroSection({
         <div className="mb-8 flex justify-center lg:justify-start">
           <img
             src="/maxinteclogo.webp"
-            alt="Maxintec"
+            alt="Maxintec soluções em segurança eletrônica"
             className="h-10 w-auto md:h-12"
           />
         </div>
@@ -47,10 +51,8 @@ export default function HeroSection({
           {/* TEXT */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             
-            <span className="inline-block mb-4 rounded-full border-2 border-white/60 px-5 py-2 text-[14px] font-bold uppercase tracking-widest text-white">
-              {title}
-            </span>
-
+            <SectionTag text={title}/>
+              
             {/* Subtitle */}
             <h1 className="mb-4 text-2xl font-bold leading-[1.2] text-white sm:text-3xl lg:text-3xl max-w-[40ch] lg:max-w-none">
               {subtitle}
@@ -61,14 +63,14 @@ export default function HeroSection({
               {description}
             </p>
 
-            <WhatsAppButton/>
+            <WhatsAppButton className="bg-green-600 text-white border-green-600 hover:bg-green-500 shadow-green-900/20" />
           </div>
 
           {/* Image */}
           <div className="hidden lg:flex justify-center lg:justify-end">
             <img
               src={image}
-              alt="Ilustração"
+              alt="Ilustração representando segurança eletrônica inteligente"
               className="w-full max-w-md lg:max-w-xl object-contain drop-shadow-2xl [mask-image:linear-gradient(to_bottom,black_85%,transparent)]"
             />
           </div>
