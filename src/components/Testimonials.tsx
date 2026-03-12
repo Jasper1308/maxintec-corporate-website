@@ -18,7 +18,10 @@ export default function TestimonialsSection() {
             </div>
 
             <div className="mx-auto max-w-6xl">
-                 <SectionTag text={"FEEDBACK CLIENTES"}/>
+                 <SectionTag
+                    text="FEEDBACK CLIENTES"
+                    className="bg-white text-[#16569B] shadow-md"
+                 />
 
                 <h2 className="text-white text-3xl md:text-5xl font-bold mb-12">
                     Quem confia na Maxintec, recomenda
@@ -30,8 +33,11 @@ export default function TestimonialsSection() {
                     ))}
                 </div>
 
-                <div className="mt-16 flex flex-wrap justify-center gap-4">
-                    <WhatsAppButton className="border-white text-white bg-transparent hover:bg-white/10 shadow-blue-900/30" />
+                <div className="mt-16 flex flex-wrap justify-center gap-6">
+                    <WhatsAppButton
+                        size="lg"
+                        className="border-white text-black bg-green-600 hover:bg-green-500 shadow-green-900/20"
+                    />
                 </div>
             </div>
         </section>

@@ -17,7 +17,6 @@ export default function HeroSection({
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex flex-col justify-center py-10 lg:py-20">
       
-      {/* Background & Overlay */}
       <div className="absolute inset-0 -z-10">
         <video
           autoPlay
@@ -36,7 +35,6 @@ export default function HeroSection({
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-12 w-full">
         
-        {/* Logo */}
         <div className="mb-8 flex justify-center lg:justify-start">
           <img
             src="/maxinteclogo.webp"
@@ -45,28 +43,26 @@ export default function HeroSection({
           />
         </div>
 
-        {/* GRID */}
         <div className="grid grid-cols-1 items-center gap-32 lg:grid-cols-2">
 
-          {/* TEXT */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+
+            <SectionTag
+              text={title}
+              className="border-2 border-white/60 text-white"
+            />
             
-            <SectionTag text={title}/>
-              
-            {/* Subtitle */}
             <h1 className="mb-4 text-2xl font-bold leading-[1.2] text-white sm:text-3xl lg:text-3xl max-w-[40ch] lg:max-w-none">
               {subtitle}
             </h1>
 
-            {/* Description */}
             <p className="mb-8 text-base text-gray-200 md:text-lg max-w-[45ch] leading-relaxed">
               {description}
             </p>
 
-            <WhatsAppButton className="bg-green-600 text-white border-green-600 hover:bg-green-500 shadow-green-900/20" />
+            <WhatsAppButton className="bg-green-600 text-black border-green-600 hover:bg-green-500 shadow-green-900/20" />
           </div>
 
-          {/* Image */}
           <div className="hidden lg:flex justify-center lg:justify-end">
             <img
               src={image}
