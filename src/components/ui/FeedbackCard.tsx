@@ -14,7 +14,18 @@ export default function FeedbackCard({
     image,
 }: FeedbackCardProps) {
     return (
-        <div className="bg-[#1e3a5f] rounded-[1rem] p-8 flex flex-col items-center shadow-2xl">
+        <div className="flex flex-col items-center justify-center 
+                      bg-[#1e3a5f] 
+                        p-8 
+                        rounded-2xl 
+                        border border-[#2a4a73] 
+                        shadow-[0_8px_30px_rgba(0,0,0,0.2)] 
+                        hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] 
+                        transition-all duration-300 
+                        w-full max-w-[350px] min-h-[280px] 
+                        text-center 
+                        group
+        ">
             <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden mb-4">
                 <img src={image} alt={name} className="w-full h-full object-cover" />
             </div>

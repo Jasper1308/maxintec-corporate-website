@@ -3,11 +3,13 @@ type WhatsAppButtonSize = "md" | "lg";
 type WhatsAppButtonProps = {
   className?: string;
   size?: WhatsAppButtonSize;
+  dataCtaLocation?: string;
 };
 
 export default function WhatsAppButton({
   className = "",
   size = "md",
+  dataCtaLocation,
 }: WhatsAppButtonProps) {
   const paddingClasses =
     size === "lg" ? "px-10 py-3.5 text-base" : "px-8 py-3.5 text-sm";
@@ -19,6 +21,7 @@ export default function WhatsAppButton({
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Fale agora com a Maxintec pelo WhatsApp"
+      data-cta-location={dataCtaLocation}
       className={`inline-flex items-center justify-center gap-2 border rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg ${paddingClasses} ${className}`}
     >
       <img

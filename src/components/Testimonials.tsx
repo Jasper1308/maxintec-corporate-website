@@ -23,7 +23,7 @@ export default function TestimonialsSection() {
                     className="bg-white text-[#16569B] shadow-md"
                  />
 
-                <h2 className="text-white text-3xl md:text-5xl font-bold mb-12">
+                <h2 className="text-white text-3xl md:text-4xl font-extrabold mb-12">
                     Quem confia na Maxintec, recomenda
                 </h2>
 
@@ -36,6 +36,7 @@ export default function TestimonialsSection() {
                 <div className="mt-16 flex flex-wrap justify-center gap-6">
                     <WhatsAppButton
                         size="lg"
+                        dataCtaLocation="testimonials"
                         className="border-white text-black bg-green-600 hover:bg-green-500 shadow-green-900/20"
                     />
                 </div>

@@ -60,7 +60,10 @@ export default function HeroSection({
               {description}
             </p>
 
-            <WhatsAppButton className="bg-green-600 text-black border-green-600 hover:bg-green-500 shadow-green-900/20" />
+            <WhatsAppButton
+              dataCtaLocation="hero"
+              className="bg-green-600 text-black border-green-600 hover:bg-green-500 shadow-green-900/20"
+            />
           </div>
 
           <div className="hidden lg:flex justify-center lg:justify-end">

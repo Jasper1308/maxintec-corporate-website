@@ -22,7 +22,7 @@ export default function SolutionsSection() {
           text="Nossas Soluções"
           className="bg-slate-800 text-white"
         />
-        <h2 className="text-3xl md:text-5xl font-extrabold text-[#444] mb-6">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-[#444] mb-6">
           Com a Maxintec é proteção completa para quem mais importa!
         </h2>
       </div>
@@ -38,7 +38,10 @@ export default function SolutionsSection() {
         ))}
       </div>
 
-      <WhatsAppButton className="bg-green-600 text-black border-green-600 hover:bg-green-500 shadow-green-900/20" />
+      <WhatsAppButton
+        dataCtaLocation="solutions"
+        className="bg-green-600 text-black border-green-600 hover:bg-green-500 shadow-green-900/20"
+      />
 
    </section>
   );
