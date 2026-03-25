@@ -27,7 +27,7 @@ export default function TestimonialsSection() {
                     Quem confia na Maxintec, recomenda
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
                     {reviews.map((rev) => (
                         <FeedbackCard key={rev.name} {...rev} />
                     ))}

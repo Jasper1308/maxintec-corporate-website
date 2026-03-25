@@ -15,7 +15,7 @@ export const heroContent = {
                 Santa Catarina`,
         description: `Soluções inovadoras em aspiração central, piso aquecido,
                     sistemas anti-mofo e carregadores veiculares.`,
-        image: "robot.png"
+        image: "mansao.png"
     },
     fire: {
         title: "SUA SEGURANÇA, É NOSSA PRIORIDADE!",
@@ -25,6 +25,6 @@ export const heroContent = {
                       indústrias e prédios comerciais. Atendendo todas as
                       exigências legais para garantir a máxima segurança em
                       situações críticas.`,
-        image: "robot.png"
+        image: "bombeiro.png"
     }
 }

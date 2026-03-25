@@ -8,24 +8,24 @@ export interface Review {
 
 export const reviews: Review[] = [
     {
-        name: "Felipe G.",
+        name: "Celso Fernando",
         role: "Síndico",
-        text: "A portaria remota trouxe mais tranquilidade para os moradores. Antes gastávamos muito com portaria presencial e ainda tínhamos falhas. Agora temos segurança reforçada e um atendimento imediato sempre que precisamos.",
+        text: "Valorizo muito empresas comprometidas e profissionais no atendimento ao nosso condomínio. Fomos muito bem atendidos pela equipe da MaxlnTec, sempre atenciosos e com excelente execução do serviço. Parabéns, equipe nota 10!",
         stars: 5,
-        image: "/felipeGImage.webp"
+        image: "/celsoFernando.png"
     },
     {
-        name: "Guilherme F.",
+        name: "Alexandre Stein",
         role: "Empresário",
-        text: "Instalamos o sistema de controle de acesso facial da Maxintec na nossa empresa e foi um divisor de águas. Além de segurança, ganhamos agilidade no dia a dia. O atendimento foi rápido e muito profissional.",
+        text: "Fiz uma reunião com eles e fiquei surpreso com o atendimento consultivo e, principalmente, ao perceber como minha visão sobre segurança e soluções era limitada. Em uma única reunião com a MaxInTec, encontraram soluções que eu nem imaginava. Recomendo que, antes de iniciar sua obra, faça uma visita/reunião com eles. Tenho certeza de que seu projeto vai subir de nível em várias áreas!",
         stars: 5,
-        image: "/guilhermeFImage.webp"
+        image: "/alexandreStein.png"
     },
     {
-        name: "Patrícia L.",
-        role: "Residencial",
-        text: "Atendimento rápido e eficiente. A instalação das câmeras foi feita no mesmo dia e o suporte sempre responde prontamente. Gostei muito da experiência.",
+        name: "Leandro Pereira",
+        role: "Síndico",
+        text: "Maxintec é uma excelente empresa de Segurança e Automação, profissionais técnicos Roberto e João são muito competentes e organizados! Sou síndico 3 condomínios, sempre me atendem com excelência. Super indico essa empresa.",
         stars: 5,
-        image: "/patriciaLImage.webp"
+        image: "/leandroPereira.png"
     },
 ];

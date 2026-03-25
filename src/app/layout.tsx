@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Maxintec – Segurança eletrônica e monitoramento 24h",
+  title: "Maxintec – Segurança e Automação",
   description:
     "Câmeras, alarmes, controle de acesso e monitoramento 24h para empresas, condomínios e residências em Santa Catarina com a Maxintec.",
   metadataBase: new URL("https://www.maxintec.seg.br"),
