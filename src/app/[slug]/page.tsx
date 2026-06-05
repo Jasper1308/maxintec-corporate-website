@@ -1,7 +1,7 @@
 import LandingPageTemplate from "../../components/LandingPageTemplate";
 import { heroContent } from "../../data/heroContent";
 import { notFound } from "next/navigation";
-import WhatsAppFloatButton from "@/src/components/ui/WhatsAppFloatButton";
+import WhatsAppFloatButton from "@/components/ui/WhatsAppFloatButton";
 
 export function generateStaticParams() {
   return [
