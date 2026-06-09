@@ -24,7 +24,7 @@ export default function Header() {
 
   return (
     <header className="w-full bg-blue-950/95 backdrop-blur-md text-white sticky top-0 z-50 border-b border-blue-800/60 shadow-sm shadow-blue-950/30">
-      <div className={`container mx-auto px-4 ${isScrolled ? "py-2" : "py-3"} md:px-6 ${isScrolled ? "md:py-3" : "md:py-4"} flex items-center justify-between gap-4 md:gap-5 transition-all duration-300 ease-out`}>
+      <div className={`container mx-auto px-4 md:px-6 py-3 md:py-4 min-h-[72px] md:min-h-[88px] flex items-center justify-between gap-4 md:gap-5 transition-all duration-300 ease-out ${isScrolled ? "border-b border-blue-800/70 bg-blue-950/95 shadow-xl shadow-blue-950/30" : "border-b border-blue-800/60 bg-blue-950/90"}`}>
         
         {/* Logo */}
         <Link href="/institutional" className="flex items-center text-white min-w-0">
@@ -92,18 +92,25 @@ export default function Header() {
         </div>
 
         {/* Mobile Hamburger Button */}
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-slate-400 hover:text-white">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-controls="mobile-menu"
+          aria-expanded={isOpen}
+          className="md:hidden text-slate-400 hover:text-white"
+        >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path></svg>
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-blue-950 border-b border-blue-900/70 px-4 py-4 flex flex-col gap-3">
+        <div id="mobile-menu" className="md:hidden bg-blue-950 border-b border-blue-900/70 px-4 py-4 flex flex-col gap-3">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setIsOpen(false)}
               className={`block px-4 py-3 rounded-xl transition-colors ${isSectionActive(item.href) ? "bg-slate-900/90 border border-white/90 text-white" : "bg-slate-900 text-slate-100 hover:bg-slate-800"}`}
             >
               {item.label}
@@ -111,12 +118,14 @@ export default function Header() {
           ))}
           <Link
             href={buttons.clientArea.href}
+            onClick={() => setIsOpen(false)}
             className="block px-4 py-3 rounded-xl bg-slate-800 text-blue-200 font-semibold hover:bg-slate-700 transition-colors"
           >
             {buttons.clientArea.label}
           </Link>
           <Link
             href={buttons.requestProject.href}
+            onClick={() => setIsOpen(false)}
             className="block px-4 py-3 rounded-xl bg-blue-600 text-white text-center font-semibold hover:bg-blue-500 transition-colors"
           >
             {buttons.requestProject.label}

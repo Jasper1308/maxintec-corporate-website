@@ -18,7 +18,7 @@ export const headerNavigation = {
         href: "/solutions/access-control",
       },
       {
-        label: "Alarmes de Incêndio e Intrusão",
+        label: "Alarmes de Intrusão",
         href: "/solutions/fire-alarms",
       },
       {
@@ -38,7 +38,7 @@ export const headerNavigation = {
   buttons: {
     clientArea: {
       label: "Área do Cliente",
-      href: "/register",
+      href: "/login",
     },
     requestProject: {
       label: "Solicitar Projeto",

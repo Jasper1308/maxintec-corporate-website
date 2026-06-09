@@ -50,9 +50,9 @@ export const institutionalHomeContent = {
       subtitle: "Proteção Proativa",
     },
     {
-      src: "/cityBackground.jpg",
-      alt: "Conectividade e infraestrutura empresarial",
-      subtitle: "Operação Conectada",
+      src: "/equipe.png",
+      alt: "Equipe MaxInTec em ação",
+      subtitle: "Engenharia Especializada",
     },
   ],
   sections: [

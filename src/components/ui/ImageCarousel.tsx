@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type PointerEvent } from "react";
 
 type CarouselImage = {
   src: string;
@@ -14,6 +14,10 @@ type ImageCarouselProps = {
 
 export default function ImageCarousel({ images }: ImageCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
+  const [dragDelta, setDragDelta] = useState(0);
+  const dragWrapperRef = useRef<HTMLDivElement | null>(null);
 
   if (images.length === 0) return null;
 
@@ -27,14 +31,74 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
     setActiveIndex((currentIndex) => (currentIndex + 1) % images.length);
   };
 
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setDragStartX(event.clientX);
+    setDragDelta(0);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isDragging || dragStartX === null) return;
+    setDragDelta(event.clientX - dragStartX);
+  };
+
+  const handlePointerEnd = () => {
+    if (!isDragging) return;
+
+    if (dragDelta > 60) {
+      prevSlide();
+    } else if (dragDelta < -60) {
+      nextSlide();
+    }
+
+    setIsDragging(false);
+    setDragStartX(null);
+    setDragDelta(0);
+  };
+
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/90 shadow-xl shadow-slate-950/20">
+    <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/90 shadow-xl shadow-slate-950/20">
       <div className="relative">
-        <div className="aspect-[16/9] w-full overflow-hidden bg-slate-950">
-          <img src={current.src} alt={current.alt} className="h-full w-full object-cover transition duration-700 ease-out" />
+        <div
+          ref={dragWrapperRef}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerEnd}
+          onPointerCancel={handlePointerEnd}
+          onPointerLeave={handlePointerEnd}
+          className="w-full h-[28rem] sm:h-[34rem] overflow-hidden bg-slate-950 sm:rounded-[2rem] cursor-grab active:cursor-grabbing select-none"
+          style={{ touchAction: "pan-y" }}
+        >
+          <div
+            className="flex h-full"
+            style={{
+              transform: `translateX(calc(${-activeIndex * (100 / images.length)}% + ${dragDelta}px))`,
+              transition: isDragging ? "none" : "transform 300ms ease",
+              width: `${images.length * 100}%`,
+            }}
+          >
+            {images.map((image) => (
+              <div
+                key={image.src}
+                className="h-full flex-shrink-0 overflow-hidden flex items-center justify-center bg-slate-950"
+                style={{ width: `${100 / images.length}%` }}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  onDragStart={(event) => event.preventDefault()}
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="absolute inset-x-0 top-6 flex items-center justify-between px-4 sm:px-6">
+        <div className="absolute inset-x-0 top-6 flex items-center justify-between px-4 sm:px-6 z-10">
           <button
             type="button"
             onClick={prevSlide}
