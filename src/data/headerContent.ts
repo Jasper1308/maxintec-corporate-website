@@ -11,28 +11,22 @@ export const headerNavigation = {
     },
   ],
   solutions: {
-    label: "Soluções",
+    label: "Sistemas",
     items: [
-      {
-        label: "Controle de Acesso e Reconhecimento Facial",
-        href: "/solutions/access-control",
-      },
-      {
-        label: "Alarmes de Intrusão",
-        href: "/solutions/fire-alarms",
-      },
-      {
-        label: "CFTV Inteligente e Análise de Vídeo",
-        href: "/solutions/cctv-analytics",
-      },
-      {
-        label: "Cabeamento Estruturado e Wi-Fi Empresarial",
-        href: "/solutions/network-infrastructure",
-      },
-      {
-        label: "Armários Inteligentes",
-        href: "/solutions/smart-lockers",
-      },
+      { label: "CFTV Inteligente", href: "/sistemas/cftv" },
+      { label: "Controle de Acesso", href: "/sistemas/controle-de-acesso" },
+      { label: "Alarme de Intrusão", href: "/sistemas/alarme-de-intrusao" },
+      { label: "Vídeo Porteiro IP", href: "/sistemas/video-porteiro" },
+      { label: "Automação de Portas e Portões", href: "/sistemas/automacao-de-portas-e-portoes" },
+      { label: "Cerca Elétrica", href: "/sistemas/cerca-eletrica" },
+      { label: "Alarme de Incêndio", href: "/sistemas/alarme-de-incendio" },
+      { label: "Iluminação de Emergência", href: "/sistemas/iluminacao-de-emergencia" },
+      { label: "Internet Predial & Redes", href: "/sistemas/internet-predial-e-redes" },
+      { label: "Automação Predial", href: "/sistemas/automacao-predial" },
+      { label: "Aspiração Central", href: "/sistemas/aspiracao-central" },
+      { label: "Piso Aquecido", href: "/sistemas/piso-aquecido" },
+      { label: "Sonorização Comercial", href: "/sistemas/sonorizacao" },
+      { label: "Carregamento Veicular", href: "/sistemas/carregamento-veicular" },
     ],
   },
   buttons: {

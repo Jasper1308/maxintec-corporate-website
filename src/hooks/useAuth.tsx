@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -13,7 +13,9 @@ type AuthContextType = {
   signOut: () => Promise<void>;
 };
 
-export function useAuth() {
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -34,6 +36,7 @@ export function useAuth() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      setLoading(false);
     });
 
     return () => subscription?.unsubscribe();
@@ -69,5 +72,23 @@ export function useAuth() {
     }
   }, [router]);
 
-  return { user, loading, signUp, signIn, signOut };
+  return (
+    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    return {
+      user: null,
+      loading: false,
+      signUp: async () => ({ error: 'AuthProvider missing' }),
+      signIn: async () => ({ error: 'AuthProvider missing' }),
+      signOut: async () => {},
+    };
+  }
+  return context;
 }

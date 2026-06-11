@@ -75,6 +75,18 @@ export const institutionalHomeContent = {
       ],
     },
   ],
+  featuredVideos: [
+  "dVlnkbKs2lQ", // Depoimento: Milton do Ed. Sul América
+  "h8XqZJugdZw", // Depoimento: Jackson do CIC Blumenau
+  "XBZVLQu9Tmg", // ID corrigida do terceiro vídeo
+  "DXkFROEjrc0"  // ID corrigida do quarto vídeo
+  ],
+  featuredLogos: [
+    { src: "/logos/scire.svg", alt: "Logo de cliente corporativo 1" },
+    { src: "/logos/logo-rogga-vermelho.png", alt: "Logo de cliente corporativo 2" },
+    { src: "/logos/logo-marieta-konder-bornhausen.png", alt: "Logo de cliente corporativo 3" },
+    { src: "/logo4.png", alt: "Logo de cliente corporativo 4" },
+  ],
 };
 
 export const institutionalAboutContent = {

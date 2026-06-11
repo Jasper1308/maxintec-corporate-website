@@ -96,6 +96,11 @@ export default function LoginPage() {
                 Criar conta
               </Link>
             </p>
+            <p className="mt-3 text-center text-sm">
+              <Link href="/institutional" className="text-blue-400 hover:text-blue-300 transition">
+                Voltar
+              </Link>
+            </p>
           </div>
         </div>
       </div>

@@ -1,22 +1,24 @@
 'use client';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useAuth, AuthProvider } from '@/hooks/useAuth';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const isAuthPage = pathname === '/login' || pathname === '/signup';
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !isAuthPage) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+    if (!loading && user && isAuthPage) {
+      router.push('/tools');
+    }
+  }, [user, loading, router, isAuthPage]);
 
   if (loading) {
     return (
@@ -26,9 +28,29 @@ export default function ClientLayout({
     );
   }
 
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
+
   if (!user) {
     return null;
   }
 
   return <>{children}</>;
+}
+
+export default function ClientLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <AuthProvider>
+      <AuthGuard>
+        <div className="client-dashboard-layout">
+          {children}
+        </div>
+      </AuthGuard>
+    </AuthProvider>
+  );
 }

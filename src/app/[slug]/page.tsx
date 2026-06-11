@@ -14,13 +14,13 @@ export function generateStaticParams() {
 type Variant = "standard" | "aspiration" | "fire";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     slug: Variant;
-  };
+  }>;
 };
 
-export default function Page({ params }: PageProps) {
-  const { slug } = params;
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params;
   const validVariants = ["standard", "aspiration", "fire"] as const;
 
   if (!validVariants.includes(slug)) {
