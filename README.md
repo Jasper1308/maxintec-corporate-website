@@ -1,47 +1,41 @@
-# MaxInTec Corporate Website
+nextjs_readme = """# 🌐 MaxInTec Corporate Website & Client Portal
 
-Modern corporate landing page developed for MaxInTec, a security and technology company based in Santa Catarina, Brazil.
+A modern, highly optimized corporate platform and secure client portal built with Next.js, TypeScript, and Tailwind CSS. This system bridges user-centric marketing interfaces with an authenticated client space integrated into a cloud Backend-as-a-Service (BaaS) architecture.
 
-This project is the foundation of a scalable institutional platform that will evolve into a complete corporate website.
+📐 Decoupled Architectural Strategy
+The platform is engineered with a strict operational separation between public content distribution and secure application features:
 
----
+High-Conversion Landing Page: Fully optimized for search engine indexing (SEO), web vitals (Largest Contentful Paint, First Input Delay), and lightning-fast asset loading to capture potential B2B automation clients.
 
-## 🚀 Tech Stack
+Authenticated Client Portal: A secure, dynamic single-page dashboard experience allowing active clients to monitor active systems, infrastructure health, and access support channels.
 
-- Next.js
-- React
-- Tailwind CSS
-- Responsive Design
-- Optimized video background
-- WhatsApp integration
+🔒 Key Technical Highlights & Integrations
+1. Supabase Cloud Infrastructure (BaaS)
+The platform offloads infrastructure management to Supabase, leveraging its enterprise-grade cloud capabilities:
 
----
+Robust Authentication (Auth): Implements JWT-based secure session handling, protecting client data and limiting administrative actions to verified company operators.
 
-## 🎯 Current Features
+PostgreSQL Data Layer: Manages client metadata, portal settings, and permission tracking with strict security policies.
 
-- Hero section with full-screen video background
-- Call-to-action with WhatsApp integration
-- Modern and clean UI
-- Responsive layout
-- Performance-oriented structure
+Real-Time Subscriptions: Built on top of PostgreSQL's replication stream, allowing instant updates on the client UI when security or operational metrics shift.
 
----
+2. Modern Frontend Architecture
+Next.js (App Router): Leverages hybrid rendering strategies, using Server-Side Rendering (SSR) for initial SEO-critical pages and Client-Side rendering for interactive dashboard modules.
 
-## 📈 Roadmap (Next Steps)
+TypeScript: Strict typing across all components, API wrappers, and data contracts to catch bugs at compile-time and enforce predictable UI states.
 
-- Additional institutional pages (About, Services, Contact)
-- SEO optimization improvements
-- Blog section
-- Contact form with backend integration
-- Performance improvements and accessibility adjustments
+Tailwind CSS: Fully customized atomic design system ensuring utility-first, responsive, and lightweight CSS payloads across both mobile and wide monitoring screens.
 
----
+🛠️ Technology Stack
+Frontend Framework: Next.js (React Framework)
 
-## 💡 Purpose
+Language: TypeScript
 
-The goal of this project is to build a high-quality corporate website focused on:
+Styling Engine: Tailwind CSS
 
-- Brand positioning
-- Lead generation
-- Modern web standards
-- Scalability for future features
+Backend-as-a-Service (BaaS): Supabase (Auth, Database, Storage)
+
+State & Data Management: React Hooks & Supabase Real-Time Client
+
+Developed by Adrian Jasper - Full-Stack Developer & Technical Infrastructure Engineer.
+"""
