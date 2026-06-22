@@ -1,35 +1,38 @@
-import LandingPageTemplate from "../../components/LandingPageTemplate";
+﻿import LandingPageTemplate from "../../components/LandingPageTemplate";
 import { heroContent } from "../../data/heroContent";
 import { notFound } from "next/navigation";
-import WhatsAppFloatButton from "@/src/components/ui/WhatsAppFloatButton";
+import WhatsAppFloatButton from "@/components/ui/WhatsAppFloatButton";
 
 export function generateStaticParams() {
   return [
     { slug: "standard" },
     { slug: "aspiration" },
     { slug: "fire" },
-  ];
+  ] as const;
 }
 
-type Variant = 'standard' | 'aspiration' | 'fire';
+type Variant = "standard" | "aspiration" | "fire";
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+type PageProps = {
+  params: Promise<{
+    slug: Variant;
+  }>;
+};
+
+export default async function Page({ params }: PageProps) {
   const { slug } = await params;
+  const validVariants = ["standard", "aspiration", "fire"] as const;
 
-const validVariants = ['standard', 'aspiration', 'fire'] as const;
+  if (!validVariants.includes(slug)) {
+    notFound();
+  }
 
-if (!validVariants.includes(slug as any)) {
-  notFound();
-}
+  const content = heroContent[slug];
 
-const variant = slug as Variant;
-
-const content = heroContent[variant];
-  
   return (
-        <main>
-          <LandingPageTemplate content={content} variant={variant} />
-          <WhatsAppFloatButton />
-        </main>
-    );
+    <main>
+      <LandingPageTemplate content={content} variant={slug} />
+      <WhatsAppFloatButton />
+    </main>
+  );
 }
