@@ -1,14 +1,9 @@
-<<<<<<< HEAD:src/components/landing/Herosection.tsx
-import WhatsAppButton from "../ui/WhatsAppButton";
-import SectionTag from "../ui/SectionTag";
-=======
 "use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import WhatsAppButton from "./ui/WhatsAppButton";
-import SectionTag from "./ui/SectionTag";
->>>>>>> hotfix-lp:src/components/herosection.tsx
+import WhatsAppButton from "../ui/WhatsAppButton";
+import SectionTag from "../ui/SectionTag";
 
 type HeroProps = {
   title: string;
