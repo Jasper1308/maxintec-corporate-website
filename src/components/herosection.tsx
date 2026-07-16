@@ -1,3 +1,7 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import WhatsAppButton from "./ui/WhatsAppButton";
 import SectionTag from "./ui/SectionTag";
 
@@ -14,9 +18,18 @@ export default function HeroSection({
   description,
   image
 }: HeroProps) {
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVideoSrc("/videos/bg.mp4");
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex flex-col justify-center py-10 lg:py-20">
-      
       <div className="absolute inset-0 -z-10">
         <video
           autoPlay
@@ -28,25 +41,27 @@ export default function HeroSection({
           poster="/videos/bg-poster.jpg"
           className="h-full w-full object-cover"
         >
-          <source src="/videos/bg.mp4" type="video/mp4" />
+          {videoSrc && <source src={videoSrc} type="video/mp4" />}
         </video>
         <div className="absolute inset-0 bg-blue-800/15" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-12 w-full">
-        
         <div className="mb-8 flex justify-center lg:justify-start">
-          <img
+          <Image
             src="/maxinteclogo.webp"
             alt="Maxintec soluções em segurança eletrônica"
+            width={180}
+            height={48}
+            priority
             className="h-10 w-auto md:h-12"
           />
         </div>
 
-        <div className="grid grid-cols-1 items-center gap-32 lg:grid-cols-2">
-
+        {/* Mudamos de grid puro para flexbox empilhado no mobile, virando grid apenas no desktop */}
+        <div className="flex flex-col lg:grid lg:grid-cols-2 items-center gap-12 lg:gap-32 w-full">
+          
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-
             <SectionTag
               text={title}
               className="border-2 border-white/60 text-white"
@@ -66,14 +81,18 @@ export default function HeroSection({
             />
           </div>
 
-          <div className="hidden lg:flex justify-center lg:justify-end">
-            <img
+          {/* Mantemos o container relativo e o fill do Next.js, mas visível no mobile */}
+          {/* Adicionada altura menor no mobile (h-[300px]) e maior no desktop (lg:h-[450px]) */}
+          <div className="relative w-full h-[300px] lg:h-[450px] mt-12 lg:mt-0">
+            <Image
               src={image}
               alt="Ilustração representando segurança eletrônica inteligente"
-              className="w-full max-w-md lg:max-w-xl object-contain drop-shadow-2xl [mask-image:linear-gradient(to_bottom,black_85%,transparent)]"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 500px"
+              className="object-contain drop-shadow-2xl [mask-image:linear-gradient(to_bottom,black_85%,transparent)]"
             />
           </div>
-
         </div>
       </div>
     </section>

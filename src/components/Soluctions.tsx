@@ -11,11 +11,11 @@ export default function Soluctions({ variant = 'standard' }: SoluctionsProps) {
   const solutions = solutionsContent[variant];
 
   return (
-    <section className="py-20 px-4 bg-white flex flex-col items-center">
+    <section className="relative z-10 w-full block py-20 px-4 bg-white flex flex-col items-center">
       
-      <div className="text-center mb-16 max-w-4xl">
+      <div className="text-center mb-16 max-w-4xl w-full">
         <SectionTag
-          text="Nossas Soluções"
+          text="Outras Soluções"
           className="bg-slate-800 text-white"
         />
         <h2 className="text-3xl md:text-4xl font-extrabold text-[#444] mb-6">
