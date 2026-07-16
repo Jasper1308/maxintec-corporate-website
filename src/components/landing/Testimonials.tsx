@@ -1,7 +1,7 @@
-import FeedbackCard from "./ui/FeedbackCard";
-import WhatsAppButton from "./ui/WhatsAppButton";
-import { reviews } from "../data/cardContent";
-import SectionTag from "./ui/SectionTag";
+import FeedbackCard from "../ui/FeedbackCard";
+import WhatsAppButton from "../ui/WhatsAppButton";
+import { reviews } from "../../data/landing/cardContent";
+import SectionTag from "../ui/SectionTag";
 
 export default function TestimonialsSection() {
     return (

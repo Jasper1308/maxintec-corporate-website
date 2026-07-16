@@ -1,5 +1,5 @@
-import WhatsAppButton from "./ui/WhatsAppButton";
-import SectionTag from "./ui/SectionTag";
+import WhatsAppButton from "../ui/WhatsAppButton";
+import SectionTag from "../ui/SectionTag";
 
 type HeroProps = {
   title: string;

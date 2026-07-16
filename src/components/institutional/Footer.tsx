@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { headerNavigation } from "@/data/headerContent"; 
+import { headerNavigation } from "@/data/institutional/headerContent"; 
 // Dica: Se preferir, pode criar o @/data/footerContent específico e importar dele.
 // Aqui estou reaproveitando a logo e itens estruturais do headerContent fornecido.
 

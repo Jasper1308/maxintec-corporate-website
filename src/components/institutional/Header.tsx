@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { headerNavigation } from "@/data/headerContent";
+import { headerNavigation } from "@/data/institutional/headerContent";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);

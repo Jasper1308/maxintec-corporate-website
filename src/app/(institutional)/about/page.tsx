@@ -1,4 +1,4 @@
-﻿import { institutionalAboutContent } from "@/data/institutionalContent";
+﻿import { institutionalAboutContent } from "@/data/institutional/institutionalContent";
 import { responsiveHeadings } from "@/data/typographyScale";
 
 export default function AboutPage() {

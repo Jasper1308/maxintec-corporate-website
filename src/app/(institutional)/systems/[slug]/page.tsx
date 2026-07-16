@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { systemContent } from "@/data/systemContent";
+import { systemContent } from "@/data/institutional/systemContent";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -130,7 +130,6 @@ export default async function SistemaDynamicPage({ params }: PageProps) {
 
         </div>
       </section>
-
     </main>
   );
 }

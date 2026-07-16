@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
-import Header from "@/components/ui/Header";
+import Header from "@/components/institutional/Header";
+import Footer from "@/components/institutional/Footer";
 
 export const metadata: Metadata = {
   title: "Maxintec Institucional",
@@ -15,6 +16,7 @@ export default function InstitutionalLayout({
     <>
       <Header />
       {children}
+      <Footer />
     </>
   );
 }

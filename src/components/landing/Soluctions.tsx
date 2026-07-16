@@ -1,7 +1,7 @@
-import SectionTag from './ui/SectionTag';
-import WhatsAppButton from './ui/WhatsAppButton';
-import SolutionImageCard from './ui/SolutionImageCard';
-import { solutionsContent } from '../data/solutionContent';
+import SectionTag from '../ui/SectionTag';
+import WhatsAppButton from '../ui/WhatsAppButton';
+import SolutionImageCard from '../ui/SolutionImageCard';
+import { solutionsContent } from '../../data/landing/solutionContent';
 
 type SoluctionsProps = {
   variant?: 'standard' | 'aspiration' | 'fire';

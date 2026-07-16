@@ -1,5 +1,5 @@
-﻿import LandingPageTemplate from "../../components/LandingPageTemplate";
-import { heroContent } from "../../data/heroContent";
+﻿import LandingPageTemplate from "../../../components/landing/LandingPageTemplate";
+import { heroContent } from "../../../data/landing/heroContent";
 import { notFound } from "next/navigation";
 import WhatsAppFloatButton from "@/components/ui/WhatsAppFloatButton";
 

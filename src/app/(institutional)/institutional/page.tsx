@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import ImageCarousel from "@/components/ui/ImageCarousel";
-import Footer from "@/components/ui/Footer";
-import { institutionalHomeContent } from "@/data/institutionalContent";
+import Footer from "@/components/institutional/Footer";
+import { institutionalHomeContent } from "@/data/institutional/institutionalContent";
 import { responsiveHeadings } from "@/data/typographyScale";
 
 export default function InstitutionalPage() {
@@ -195,8 +195,6 @@ export default function InstitutionalPage() {
             </div>
           </div>
         </section>
-
-        <Footer />
       </div>
 
     </main>

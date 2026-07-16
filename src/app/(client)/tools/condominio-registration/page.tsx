@@ -4,7 +4,7 @@ import { FormEvent, useState, ChangeEvent, useRef, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import { condominiosDisponiveis } from '@/data/condominiumContent';
+import { condominiosDisponiveis } from '@/data/client/condominiumContent';
 import { responsiveHeadings } from '@/data/typographyScale';
 
 type ResidentType = 'morador' | 'locatario' | 'dependente';
