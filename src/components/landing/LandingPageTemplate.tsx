@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/components/landing/LandingPageTemplate.tsx
 import HeroSection from "./Herosection";
+=======
+import HeroSection from "./herosection";
+>>>>>>> hotfix-lp:src/components/LandingPageTemplate.tsx
 import TestimonialsSection from "./Testimonials";
 import Soluctions from "./Soluctions"
 
