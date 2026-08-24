@@ -35,7 +35,7 @@ export const institutionalHomeContent = {
   ],
   carouselImages: [
     {
-      src: "/automacao.jpg",
+      src: "/automacao.webp",
       alt: "Sistema de automação empresarial",
       subtitle: "Automação Inteligente",
     },
@@ -85,7 +85,7 @@ export const institutionalHomeContent = {
     { src: "/logos/scire.svg", alt: "Logo de cliente corporativo 1" },
     { src: "/logos/logo-rogga-vermelho.png", alt: "Logo de cliente corporativo 2" },
     { src: "/logos/logo-marieta-konder-bornhausen.png", alt: "Logo de cliente corporativo 3" },
-    { src: "/logo4.png", alt: "Logo de cliente corporativo 4" },
+    //{ src: "/logo4.png", alt: "Logo de cliente corporativo 4" },
   ],
 };
 

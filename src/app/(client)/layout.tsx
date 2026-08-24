@@ -16,7 +16,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       router.push('/login');
     }
     if (!loading && user && isAuthPage) {
-      router.push('/tools');
+      router.replace('/portal');
     }
   }, [user, loading, router, isAuthPage]);
 

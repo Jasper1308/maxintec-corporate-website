@@ -42,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated deployment/export snapshots
+/landingpage(build 16-07-2026)/
