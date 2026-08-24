@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState, ChangeEvent, useRef, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { condominiosDisponiveis } from '@/data/client/condominiumContent';
