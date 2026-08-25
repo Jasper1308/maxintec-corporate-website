@@ -19,8 +19,8 @@ interface TicketListProps {
 
 export function TicketList({ tickets, onSelect }: TicketListProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60">
-      <div className="hidden grid-cols-[minmax(7rem,0.7fr)_minmax(15rem,2fr)_minmax(11rem,1.2fr)_minmax(8rem,0.8fr)_minmax(9rem,1fr)_2rem] gap-4 border-b border-white/10 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 md:grid">
+    <div className="portal-table-shell">
+      <div className="hidden grid-cols-[minmax(7rem,0.7fr)_minmax(15rem,2fr)_minmax(11rem,1.2fr)_minmax(8rem,0.8fr)_minmax(9rem,1fr)_2rem] gap-4 border-b border-white/10 bg-slate-950/25 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 md:grid">
         <span>Número</span>
         <span>Chamado</span>
         <span>Condomínio</span>
@@ -35,7 +35,7 @@ export function TicketList({ tickets, onSelect }: TicketListProps) {
             key={ticket.id}
             type="button"
             onClick={() => onSelect(ticket)}
-            className="grid w-full gap-3 px-5 py-4 text-left transition hover:bg-white/[0.04] md:grid-cols-[minmax(7rem,0.7fr)_minmax(15rem,2fr)_minmax(11rem,1.2fr)_minmax(8rem,0.8fr)_minmax(9rem,1fr)_2rem] md:items-center md:gap-4"
+            className="grid min-h-14 w-full gap-3 px-5 py-4 text-left transition hover:bg-white/[0.04] md:grid-cols-[minmax(7rem,0.7fr)_minmax(15rem,2fr)_minmax(11rem,1.2fr)_minmax(8rem,0.8fr)_minmax(9rem,1fr)_2rem] md:items-center md:gap-4"
           >
             <div>
               <span className="text-sm font-semibold text-blue-300">

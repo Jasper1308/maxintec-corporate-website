@@ -25,8 +25,7 @@ interface NewTicketModalProps {
   onCreated: (ticketId: string) => Promise<void> | void;
 }
 
-const fieldClassName =
-  'mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none transition focus:border-blue-500';
+const fieldClassName = 'portal-field';
 
 export function NewTicketModal({
   open,
@@ -97,7 +96,7 @@ export function NewTicketModal({
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && <ErrorState message={error} />}
 
-        <label className="block text-sm font-medium text-slate-200">
+        <label className="portal-label">
           Condomínio
           <select
             required
@@ -127,7 +126,7 @@ export function NewTicketModal({
         )}
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <label className="block text-sm font-medium text-slate-200">
+          <label className="portal-label">
             Categoria
             <select
               value={category}
@@ -145,7 +144,7 @@ export function NewTicketModal({
             </select>
           </label>
 
-          <label className="block text-sm font-medium text-slate-200">
+          <label className="portal-label">
             Prioridade
             <select
               value={priority}
@@ -164,7 +163,7 @@ export function NewTicketModal({
           </label>
         </div>
 
-        <label className="block text-sm font-medium text-slate-200">
+        <label className="portal-label">
           Título
           <input
             required
@@ -177,7 +176,7 @@ export function NewTicketModal({
           />
         </label>
 
-        <label className="block text-sm font-medium text-slate-200">
+        <label className="portal-label">
           Descrição
           <textarea
             required
@@ -195,7 +194,7 @@ export function NewTicketModal({
             type="button"
             onClick={handleClose}
             disabled={submitting}
-            className="rounded-xl border border-white/10 px-4 py-2.5 text-sm text-slate-300 transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+            className="portal-button portal-button-secondary"
           >
             Cancelar
           </button>
@@ -204,7 +203,7 @@ export function NewTicketModal({
             disabled={
               submitting || condominiumsLoading || condominiums.length === 0
             }
-            className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="portal-button portal-button-primary"
           >
             {submitting ? 'Abrindo...' : 'Abrir chamado'}
           </button>

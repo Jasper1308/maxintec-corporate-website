@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { PageHeader } from '@/components/portal/PageHeader';
+import { StatusBadge } from '@/components/portal/StatusBadge';
 import {
   AccessDenied,
   EmptyState,
@@ -65,25 +66,26 @@ export default function CondominiumsPage() {
       ) : items.length === 0 ? (
         <EmptyState title="Nenhum condomínio encontrado." />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60">
+        <div className="portal-table-shell">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[620px] text-left text-sm">
-              <thead className="border-b border-white/10 text-xs uppercase tracking-wider text-slate-400">
+            <table className="portal-table min-w-[620px]">
+              <thead>
                 <tr>
                   <th className="px-5 py-4">Nome</th>
                   <th className="px-5 py-4">Código legado</th>
                   <th className="px-5 py-4">Situação</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody>
                 {items.map(item => (
                   <tr key={item.id}>
                     <td className="px-5 py-4 font-medium text-white">{item.name}</td>
                     <td className="px-5 py-4 text-slate-400">{item.legacy_code ?? '—'}</td>
                     <td className="px-5 py-4">
-                      <span className={item.active ? 'text-emerald-300' : 'text-slate-400'}>
-                        {item.active ? 'Ativo' : 'Inativo'}
-                      </span>
+                      <StatusBadge
+                        value={item.active ? 'active' : 'inactive'}
+                        label={item.active ? 'Ativo' : 'Inativo'}
+                      />
                     </td>
                   </tr>
                 ))}

@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { ArrowLeft, FileUp, ImagePlus } from 'lucide-react';
 import { type ChangeEvent, type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
+import { PageHeader } from '@/components/portal/PageHeader';
 import { ErrorState, LoadingState } from '@/components/portal/PortalStates';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { errorMessage } from '@/lib/format';
@@ -12,7 +14,7 @@ import { getRegistrationCondominiums } from '../form-queries';
 import type { RegistrationCondominiumOption, RegistrationFormValues } from '../form-types';
 import { submitRegistration } from '../submit-registration';
 
-const inputClass = 'mt-2 w-full rounded-xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-40';
+const inputClass = 'portal-field';
 
 const emptyForm = (email = ''): RegistrationFormValues => ({
   condominiumId: '', condominiumName: '', block: '', apartment: '',
@@ -121,27 +123,28 @@ export function CondominiumRegistrationForm() {
   if (loadingOptions) return <LoadingState />;
 
   return <div className="mx-auto max-w-4xl">
-    <div className="mb-7"><Link href="/portal/registrations" className="text-sm text-blue-300 hover:text-blue-200">← Voltar aos cadastros</Link><h1 className="mt-4 text-3xl font-bold">Novo cadastro de condomínio</h1><p className="mt-2 text-slate-400">Envie seus dados residenciais para análise da administração.</p></div>
-    {success && <div className="mb-5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-emerald-200">Cadastro enviado. Acompanhe a análise em Meu cadastro.</div>}
+    <Link href="/portal/registrations" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-blue-300 transition hover:text-blue-200"><ArrowLeft className="h-4 w-4" />Voltar aos cadastros</Link>
+    <PageHeader title="Novo cadastro de condomínio" description="Envie seus dados residenciais para análise da administração." />
+    {success && <div role="status" className="mb-5 rounded-xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-sm text-emerald-100">Cadastro enviado. Acompanhe a análise em Meu cadastro.</div>}
     {error && <div className="mb-5"><ErrorState message={error} /></div>}
-    <form onSubmit={handleSubmit} className="space-y-8 rounded-2xl border border-white/10 bg-slate-900/60 p-6 sm:p-8">
-      <fieldset disabled={submitting}><legend className="mb-4 text-lg font-semibold text-blue-300">Localização residencial</legend><div className="grid gap-5 sm:grid-cols-3">
-        <label className="text-sm text-slate-300">Condomínio *<select name="condominiumId" value={form.condominiumId} onChange={updateField} className={inputClass} required><option value="">Selecione...</option>{options.map(option => <option key={option.id} value={option.id}>{option.name}</option>)}</select></label>
-        <label className="text-sm text-slate-300">Bloco / torre *{selectedCondominium?.blocks.length ? <select name="block" value={form.block} onChange={updateField} className={inputClass} required><option value="">Selecione...</option>{selectedCondominium.blocks.map(block => <option key={block}>{block}</option>)}</select> : <input name="block" value={form.block} onChange={updateField} className={inputClass} disabled={!selectedCondominium} required />}</label>
-        <label className="text-sm text-slate-300">Apartamento / unidade *<input name="apartment" value={form.apartment} onChange={updateField} className={inputClass} required /></label>
+    <form onSubmit={handleSubmit} className="portal-card space-y-8 p-6 sm:p-8">
+      <fieldset disabled={submitting}><legend className="mb-5 text-lg font-semibold text-white">Localização residencial</legend><div className="grid gap-5 sm:grid-cols-3">
+        <label className="portal-label">Condomínio <span className="portal-required">*</span><select name="condominiumId" value={form.condominiumId} onChange={updateField} className={inputClass} required><option value="">Selecione...</option>{options.map(option => <option key={option.id} value={option.id}>{option.name}</option>)}</select></label>
+        <label className="portal-label">Bloco / torre <span className="portal-required">*</span>{selectedCondominium?.blocks.length ? <select name="block" value={form.block} onChange={updateField} className={inputClass} required><option value="">Selecione...</option>{selectedCondominium.blocks.map(block => <option key={block}>{block}</option>)}</select> : <input name="block" value={form.block} onChange={updateField} className={inputClass} disabled={!selectedCondominium} required />}</label>
+        <label className="portal-label">Apartamento / unidade <span className="portal-required">*</span><input name="apartment" value={form.apartment} onChange={updateField} className={inputClass} required /></label>
       </div></fieldset>
-      <fieldset disabled={submitting}><legend className="mb-4 text-lg font-semibold text-blue-300">Dados do residente</legend><div className="grid gap-5 sm:grid-cols-2">
-        <label className="sm:col-span-2 text-sm text-slate-300">Nome completo *<input name="fullName" value={form.fullName} onChange={updateField} className={inputClass} required /></label>
-        <label className="text-sm text-slate-300">CPF *<input name="cpf" value={form.cpf} onChange={updateField} inputMode="numeric" className={inputClass} required /></label>
-        <label className="text-sm text-slate-300">Vínculo *<select name="residentType" value={form.residentType} onChange={updateField} className={inputClass}><option value="morador">Morador proprietário</option><option value="locatario">Locatário</option><option value="dependente">Dependente / familiar</option></select></label>
-        <label className="text-sm text-slate-300">Telefone<input name="phone" value={form.phone} onChange={updateField} inputMode="tel" className={inputClass} /></label>
-        <label className="text-sm text-slate-300">E-mail<input value={form.email} disabled className={inputClass} /></label>
+      <fieldset disabled={submitting} className="border-t border-white/10 pt-8"><legend className="mb-5 text-lg font-semibold text-white">Dados do residente</legend><div className="grid gap-5 sm:grid-cols-2">
+        <label className="portal-label sm:col-span-2">Nome completo <span className="portal-required">*</span><input name="fullName" value={form.fullName} onChange={updateField} className={inputClass} required /></label>
+        <label className="portal-label">CPF <span className="portal-required">*</span><input name="cpf" value={form.cpf} onChange={updateField} inputMode="numeric" className={inputClass} required /></label>
+        <label className="portal-label">Vínculo <span className="portal-required">*</span><select name="residentType" value={form.residentType} onChange={updateField} className={inputClass}><option value="morador">Morador proprietário</option><option value="locatario">Locatário</option><option value="dependente">Dependente / familiar</option></select></label>
+        <label className="portal-label">Telefone<input name="phone" value={form.phone} onChange={updateField} inputMode="tel" className={inputClass} /></label>
+        <label className="portal-label">E-mail<input value={form.email} disabled className={inputClass} /></label>
       </div></fieldset>
-      <fieldset disabled={submitting}><legend className="mb-4 text-lg font-semibold text-blue-300">Foto e documentos</legend><div className="grid gap-5 sm:grid-cols-2">
-        <div className="rounded-xl border border-dashed border-white/15 p-5 text-center"><input ref={photoInput} type="file" accept="image/*" onChange={selectPhoto} className="hidden" />{preview ? <div className="relative mx-auto mb-3 h-24 w-24 overflow-hidden rounded-full"><Image src={preview} alt="Prévia da foto" fill unoptimized className="object-cover" /></div> : <p className="mb-3 text-sm text-slate-400">Foto cadastral (até 5 MB)</p>}<button type="button" onClick={() => photoInput.current?.click()} className="rounded-lg border border-white/10 px-3 py-2 text-sm">Escolher foto</button></div>
-        <div className="rounded-xl border border-dashed border-white/15 p-5 text-center"><input ref={documentInput} type="file" accept="application/pdf" multiple onChange={selectDocuments} className="hidden" /><p className="mb-3 text-sm text-slate-400">Comprovantes em PDF (até 10 MB cada)</p><button type="button" onClick={() => documentInput.current?.click()} className="rounded-lg border border-white/10 px-3 py-2 text-sm">Anexar PDFs</button></div>
-      </div>{form.documents.length > 0 && <ul className="mt-4 space-y-2 text-sm text-slate-300">{form.documents.map((document, index) => <li key={`${document.name}-${index}`} className="flex justify-between rounded-lg bg-slate-950/60 px-3 py-2"><span className="truncate">{document.name}</span><button type="button" onClick={() => setForm(current => ({ ...current, documents: current.documents.filter((_, itemIndex) => itemIndex !== index) }))} className="text-red-300">Remover</button></li>)}</ul>}</fieldset>
-      <button type="submit" disabled={submitting || options.length === 0} className="w-full rounded-xl bg-blue-600 px-5 py-3 font-medium hover:bg-blue-500 disabled:opacity-50">{submitting ? 'Enviando cadastro...' : 'Enviar cadastro'}</button>
+      <fieldset disabled={submitting} className="border-t border-white/10 pt-8"><legend className="mb-5 text-lg font-semibold text-white">Foto e documentos</legend><div className="grid gap-5 sm:grid-cols-2">
+        <div className="rounded-xl border border-dashed border-white/15 bg-slate-950/30 p-5 text-center transition hover:border-blue-400/30"><input ref={photoInput} type="file" accept="image/*" onChange={selectPhoto} className="hidden" />{preview ? <div className="relative mx-auto mb-3 h-24 w-24 overflow-hidden rounded-full ring-2 ring-blue-400/30"><Image src={preview} alt="Prévia da foto" fill unoptimized className="object-cover" /></div> : <><ImagePlus className="mx-auto mb-3 h-6 w-6 text-blue-300" /><p className="mb-3 text-sm text-slate-400">Foto cadastral (até 5 MB)</p></>}<button type="button" onClick={() => photoInput.current?.click()} className="portal-button portal-button-secondary">Escolher foto</button></div>
+        <div className="rounded-xl border border-dashed border-white/15 bg-slate-950/30 p-5 text-center transition hover:border-blue-400/30"><input ref={documentInput} type="file" accept="application/pdf" multiple onChange={selectDocuments} className="hidden" /><FileUp className="mx-auto mb-3 h-6 w-6 text-blue-300" /><p className="mb-3 text-sm text-slate-400">Comprovantes em PDF (até 10 MB cada)</p><button type="button" onClick={() => documentInput.current?.click()} className="portal-button portal-button-secondary">Anexar PDFs</button></div>
+      </div>{form.documents.length > 0 && <ul className="mt-4 space-y-2 text-sm text-slate-300">{form.documents.map((document, index) => <li key={`${document.name}-${index}`} className="flex items-center justify-between gap-3 rounded-lg bg-slate-950/60 px-3 py-2"><span className="min-w-0 truncate">{document.name}</span><button type="button" onClick={() => setForm(current => ({ ...current, documents: current.documents.filter((_, itemIndex) => itemIndex !== index) }))} className="min-h-9 shrink-0 rounded-lg px-2 text-xs font-semibold text-red-300 transition hover:bg-red-500/10 hover:text-red-200">Remover</button></li>)}</ul>}</fieldset>
+      <button type="submit" disabled={submitting || options.length === 0} className="portal-button portal-button-primary w-full">{submitting ? 'Enviando cadastro...' : 'Enviar cadastro'}</button>
     </form>
   </div>;
 }

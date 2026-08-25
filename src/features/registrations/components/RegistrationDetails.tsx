@@ -22,10 +22,10 @@ function Detail({
 }) {
   return (
     <div>
-      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
+      <dt className="text-xs font-semibold uppercase tracking-wider text-slate-500">
         {label}
       </dt>
-      <dd className="mt-1 text-sm text-slate-200">
+      <dd className="mt-1.5 text-sm text-slate-200">
         {value || '—'}
       </dd>
     </div>
@@ -46,7 +46,7 @@ export function RegistrationDetails({
     .join(' · ');
 
   return (
-    <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <dl className="grid gap-x-6 gap-y-5 sm:grid-cols-2 xl:grid-cols-3">
       <Detail
         label="Condomínio"
         value={getCondominiumName(registration)}

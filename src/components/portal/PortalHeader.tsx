@@ -5,6 +5,7 @@ import {
   CheckCheck,
   LoaderCircle,
   LogOut,
+  UserRound,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -119,13 +120,18 @@ export default function PortalHeader() {
   }
 
   return (
-    <header className="flex h-20 items-center justify-between border-b border-white/10 bg-slate-950/70 px-4 backdrop-blur-xl sm:px-6">
-      <div className="min-w-0">
-        <p className="truncate text-sm font-medium text-white">
-          {profile?.full_name ?? user?.email}
-        </p>
+    <header className="sticky top-0 z-40 flex min-h-18 items-center justify-between border-b border-white/10 bg-slate-950/80 px-4 py-3 backdrop-blur-xl sm:px-6 md:min-h-20">
+      <div className="flex min-w-0 items-center gap-3">
+        <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-400/15 bg-blue-500/10 text-blue-300 sm:flex">
+          <UserRound className="h-4.5 w-4.5" />
+        </span>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-white">
+            {profile?.full_name ?? user?.email}
+          </p>
 
-        <p className="mt-1 text-xs text-slate-400">{role}</p>
+          <p className="mt-0.5 text-xs text-slate-400">{role}</p>
+        </div>
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
@@ -140,7 +146,7 @@ export default function PortalHeader() {
             aria-expanded={notificationsOpen}
             aria-haspopup="dialog"
             onClick={() => setNotificationsOpen(open => !open)}
-            className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-slate-300 transition hover:bg-white/5 hover:text-white"
+            className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-slate-900/40 text-slate-300 transition hover:border-white/20 hover:bg-slate-800/70 hover:text-white"
           >
             <Bell className="h-4 w-4" />
 
@@ -155,7 +161,7 @@ export default function PortalHeader() {
             <section
               role="dialog"
               aria-label="Notificações"
-              className="absolute right-0 top-12 z-50 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/40"
+              className="portal-card portal-popover absolute right-0 top-12 z-50 w-[min(24rem,calc(100vw-2rem))] overflow-hidden shadow-2xl shadow-black/40"
             >
               <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3">
                 <div>
@@ -224,7 +230,7 @@ export default function PortalHeader() {
                         onClick={() => {
                           void handleNotificationClick(notification);
                         }}
-                        className={`relative block w-full border-b border-white/5 px-4 py-3 text-left transition last:border-b-0 hover:bg-white/5 disabled:cursor-wait ${
+                        className={`relative block w-full border-b border-white/5 px-4 py-3 text-left transition last:border-b-0 hover:bg-slate-800/70 disabled:cursor-wait ${
                           isUnread ? 'bg-blue-500/[0.06]' : ''
                         }`}
                       >
@@ -268,7 +274,7 @@ export default function PortalHeader() {
               console.error('Failed to sign out:', signOutError);
             });
           }}
-          className="flex h-10 items-center gap-2 rounded-xl border border-white/10 px-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white sm:px-4"
+          className="portal-button portal-button-secondary h-10 min-h-10 px-3 sm:px-4"
         >
           <LogOut className="h-4 w-4" />
           <span className="hidden sm:inline">Sair</span>

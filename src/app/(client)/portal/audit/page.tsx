@@ -21,8 +21,8 @@ function Metadata({ value }: { value: AuditLog['metadata'] }) {
 
   return (
     <details>
-      <summary className="cursor-pointer text-blue-300">Visualizar</summary>
-      <pre className="mt-2 max-w-md overflow-x-auto whitespace-pre-wrap rounded-lg bg-slate-950 p-3 text-xs text-slate-300">
+      <summary className="cursor-pointer rounded text-sm font-medium text-blue-300 transition hover:text-blue-200">Visualizar</summary>
+      <pre className="mt-2 max-w-md overflow-x-auto whitespace-pre-wrap rounded-lg border border-white/10 bg-slate-950 p-3 text-xs text-slate-300">
         {JSON.stringify(value, null, 2)}
       </pre>
     </details>
@@ -80,10 +80,10 @@ export default function AuditPage() {
       ) : items.length === 0 ? (
         <EmptyState title="Nenhum evento de auditoria encontrado." />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60">
+        <div className="portal-table-shell">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px] text-left text-sm">
-              <thead className="border-b border-white/10 text-xs uppercase tracking-wider text-slate-400">
+            <table className="portal-table min-w-[900px]">
+              <thead>
                 <tr>
                   <th className="px-5 py-4">Data</th>
                   <th className="px-5 py-4">Ação</th>
@@ -92,7 +92,7 @@ export default function AuditPage() {
                   <th className="px-5 py-4">Metadados</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 align-top">
+              <tbody className="align-top">
                 {items.map(item => (
                   <tr key={item.id}>
                     <td className="whitespace-nowrap px-5 py-4 text-slate-400">{formatDateTime(item.created_at)}</td>

@@ -14,7 +14,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-chave-anon-key
 ### 2.1 Criar Bucket de Storage
 - Ir para Storage no Supabase Dashboard
 - Criar novo bucket chamado `client-documents`
-- Configurar como Public para acesso aos arquivos
+- Manter o bucket **privado** (Public desativado)
+- Acesso aos arquivos deve ocorrer somente por signed URL após validação das policies
 
 ### 2.2 Executar SQL
 - Copiar conteúdo de `docs/supabase-setup.sql`

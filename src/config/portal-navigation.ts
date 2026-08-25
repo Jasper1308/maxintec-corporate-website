@@ -10,6 +10,34 @@ export interface PortalNavigationItem {
   permission: PortalPermission;
 }
 
+export interface PortalAccessContext {
+  isAdmin: boolean;
+  isManager: boolean;
+}
+
+export function canAccessPortalPermission(
+  permission: PortalPermission,
+  access: PortalAccessContext
+): boolean {
+  if (permission === 'authenticated') {
+    return true;
+  }
+
+  if (permission === 'admin') {
+    return access.isAdmin;
+  }
+
+  if (permission === 'manager') {
+    return access.isManager;
+  }
+
+  if (permission === 'resident') {
+    return !access.isAdmin;
+  }
+
+  return false;
+}
+
 export const portalNavigation:
   PortalNavigationItem[] = [
   {

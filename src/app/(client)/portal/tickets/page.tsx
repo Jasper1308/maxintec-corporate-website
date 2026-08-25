@@ -190,7 +190,7 @@ export default function TicketsPage() {
           <button
             type="button"
             onClick={() => setNewTicketOpen(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500"
+            className="portal-button portal-button-primary"
           >
             <Plus className="h-4 w-4" />
             Novo chamado
@@ -212,14 +212,14 @@ export default function TicketsPage() {
           {tickets.length}{' '}
           {tickets.length === 1 ? 'chamado disponível' : 'chamados disponíveis'}
         </p>
-        <label className="flex items-center gap-2 text-sm text-slate-400">
+        <label className="flex items-center gap-2 text-sm font-medium text-slate-400">
           Status
           <select
             value={statusFilter}
             onChange={event =>
               setStatusFilter(event.target.value as StatusFilter)
             }
-            className="rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-blue-500"
+            className="portal-field mt-0 min-h-10 w-auto min-w-36 py-2"
           >
             <option value="all">Todos</option>
             {ticketStatuses.map(status => (

@@ -47,8 +47,7 @@ interface TicketDetailModalProps {
   onTicketChanged: () => Promise<void>;
 }
 
-const selectClassName =
-  'mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50';
+const selectClassName = 'portal-field';
 
 const eventLabels: Record<string, string> = {
   comment: 'Comentário',
@@ -213,7 +212,7 @@ export function TicketDetailModal({
             />
           </div>
 
-          <p className="mt-5 whitespace-pre-wrap rounded-xl bg-slate-950/70 p-4 text-sm leading-6 text-slate-200">
+          <p className="mt-5 whitespace-pre-wrap rounded-xl border border-white/10 bg-slate-950/70 p-4 text-sm leading-6 text-slate-200">
             {ticket.description}
           </p>
 
@@ -246,10 +245,10 @@ export function TicketDetailModal({
         </section>
 
         {canManage && (
-          <section className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+          <section className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
             <h3 className="font-semibold text-white">Gerenciar chamado</h3>
             <div className={`mt-4 grid gap-4 ${isAdmin ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
-              <label className="text-sm font-medium text-slate-300">
+              <label className="portal-label">
                 Status
                 <select
                   value={ticket.status}
@@ -270,7 +269,7 @@ export function TicketDetailModal({
                 </select>
               </label>
 
-              <label className="text-sm font-medium text-slate-300">
+              <label className="portal-label">
                 Prioridade
                 <select
                   value={ticket.priority}
@@ -292,7 +291,7 @@ export function TicketDetailModal({
               </label>
 
               {isAdmin && (
-                <label className="text-sm font-medium text-slate-300">
+                <label className="portal-label">
                   Responsável
                   <select
                     value={ticket.assigned_to ?? ''}
@@ -342,7 +341,7 @@ export function TicketDetailModal({
                 {events.map(ticketEvent => (
                   <li
                     key={ticketEvent.id}
-                    className="rounded-xl border border-white/10 bg-slate-950/50 p-4"
+                    className="rounded-xl border border-white/10 bg-slate-950/45 p-4"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="text-sm font-medium text-slate-200">
@@ -370,14 +369,14 @@ export function TicketDetailModal({
         </section>
 
         <form onSubmit={handleComment}>
-          <label className="block text-sm font-medium text-slate-200">
+          <label className="portal-label">
             Adicionar comentário
             <textarea
               rows={4}
               value={comment}
               onChange={event => setComment(event.target.value)}
               disabled={Boolean(pendingAction)}
-              className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2.5 text-sm text-white outline-none focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="portal-field"
               placeholder="Escreva uma atualização para o histórico"
             />
           </label>
@@ -385,7 +384,7 @@ export function TicketDetailModal({
             <button
               type="submit"
               disabled={Boolean(pendingAction) || !comment.trim()}
-              className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              className="portal-button portal-button-primary"
             >
               {pendingAction === 'comment' ? 'Enviando...' : 'Enviar comentário'}
             </button>

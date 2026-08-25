@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import { supabase } from '@/lib/supabase/client';
+import { reportSupabaseError } from '@/lib/supabase/errors';
 
 import {
   getNotifications,
@@ -68,11 +69,15 @@ export function useNotifications(
       }
 
       if (!silent) {
+        notificationsRef.current = [];
+        setNotifications([]);
+        setUnreadCount(0);
         setLoading(true);
+        setError(null);
       }
 
       try {
-        const snapshot = await getNotifications();
+        const snapshot = await getNotifications(userId);
 
         if (
           !mountedRef.current ||
@@ -86,12 +91,11 @@ export function useNotifications(
         setUnreadCount(snapshot.unreadCount);
         setError(null);
       } catch (loadError) {
-        console.error('Failed to load notifications:', loadError);
+        reportSupabaseError('Failed to load notifications', loadError);
 
         if (
           mountedRef.current &&
-          currentUserIdRef.current === userId &&
-          !silent
+          currentUserIdRef.current === userId
         ) {
           setError('Não foi possível carregar as notificações.');
         }
@@ -116,40 +120,18 @@ export function useNotifications(
   );
 
   useEffect(() => {
-    if (!userId) {
-      return;
-    }
-
     let active = true;
 
-    void getNotifications()
-      .then(snapshot => {
-        if (!active || !mountedRef.current) {
-          return;
-        }
-
-        notificationsRef.current = snapshot.notifications;
-        setNotifications(snapshot.notifications);
-        setUnreadCount(snapshot.unreadCount);
-        setError(null);
-      })
-      .catch(loadError => {
-        console.error('Failed to load notifications:', loadError);
-
-        if (active && mountedRef.current) {
-          setError('Não foi possível carregar as notificações.');
-        }
-      })
-      .finally(() => {
-        if (active && mountedRef.current) {
-          setLoading(false);
-        }
-      });
+    queueMicrotask(() => {
+      if (active) {
+        void loadNotifications(false);
+      }
+    });
 
     return () => {
       active = false;
     };
-  }, [userId]);
+  }, [loadNotifications]);
 
   useEffect(() => {
     if (!userId) {
@@ -197,7 +179,7 @@ export function useNotifications(
       setMarkingIds(new Set(pendingIdsRef.current));
 
       try {
-        const readAt = await markNotificationAsRead(notificationId);
+        const readAt = await markNotificationAsRead(userId, notificationId);
 
         if (
           !mountedRef.current ||
@@ -227,7 +209,7 @@ export function useNotifications(
         setError(null);
         return true;
       } catch (markError) {
-        console.error('Failed to mark notification as read:', markError);
+        reportSupabaseError('Failed to mark notification as read', markError);
 
         if (mountedRef.current) {
           setError('Não foi possível marcar a notificação como lida.');
@@ -254,7 +236,7 @@ export function useNotifications(
     setIsMarkingAll(true);
 
     try {
-      const readAt = await markAllNotificationsAsRead();
+      const readAt = await markAllNotificationsAsRead(userId);
 
       if (
         !mountedRef.current ||
@@ -274,7 +256,7 @@ export function useNotifications(
       setError(null);
       return true;
     } catch (markError) {
-      console.error('Failed to mark all notifications as read:', markError);
+      reportSupabaseError('Failed to mark all notifications as read', markError);
 
       if (mountedRef.current) {
         setError('Não foi possível marcar todas as notificações como lidas.');

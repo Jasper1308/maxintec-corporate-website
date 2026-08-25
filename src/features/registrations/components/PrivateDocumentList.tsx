@@ -77,7 +77,7 @@ export function PrivateDocumentList({
               type="button"
               disabled={Boolean(loadingPath)}
               onClick={() => void openDocument(document)}
-              className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-left text-xs text-slate-300 transition hover:border-blue-500/40 hover:text-white disabled:cursor-wait disabled:opacity-60"
+              className="portal-button portal-button-secondary min-h-9 px-3 py-2 text-left text-xs"
             >
               <Icon className="h-4 w-4 shrink-0" />
               <span className="max-w-52 truncate">
@@ -104,7 +104,7 @@ export function PrivateDocumentList({
         }}
       >
         {!preview?.url ? (
-          <div className="flex min-h-64 items-center justify-center text-sm text-slate-400">
+          <div role="status" className="flex min-h-64 items-center justify-center text-sm text-slate-400">
             Autorizando acesso ao arquivo...
           </div>
         ) : (
@@ -118,7 +118,7 @@ export function PrivateDocumentList({
               href={preview.url}
               target="_blank"
               rel="noreferrer"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-blue-300 hover:text-blue-200"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-300 transition hover:text-blue-200"
             >
               Abrir em uma nova aba
               <ExternalLink className="h-4 w-4" />

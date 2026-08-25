@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import { ErrorState, LoadingState } from '@/components/portal/PortalStates';
+import { PageHeader } from '@/components/portal/PageHeader';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { DashboardMetricCard } from '@/features/dashboard/components/DashboardMetricCard';
 import { useDashboardMetrics } from '@/features/dashboard/useDashboardMetrics';
@@ -43,21 +44,17 @@ export default function PortalPage() {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <div className="mb-8">
-        <p className="text-sm font-medium text-blue-400">Área do Cliente</p>
-
-        <h1 className="mt-2 text-3xl font-bold tracking-tight">
-          Olá, {profile?.full_name ?? 'bem-vindo'}
-        </h1>
-
-        <p className="mt-2 text-slate-400">
-          {isAdmin
+      <PageHeader
+        eyebrow="Área do Cliente"
+        title={`Olá, ${profile?.full_name ?? 'bem-vindo'}`}
+        description={
+          isAdmin
             ? 'Visão geral da operação MaxInTec.'
             : isManager
               ? 'Acompanhe os indicadores dos condomínios sob sua gestão.'
-              : 'Acompanhe seu cadastro, seus chamados e suas notificações.'}
-        </p>
-      </div>
+              : 'Acompanhe seu cadastro, seus chamados e suas notificações.'
+        }
+      />
 
       {loading && <LoadingState />}
 
@@ -71,7 +68,7 @@ export default function PortalPage() {
       )}
 
       {!loading && !error && metrics && hasManagementView && (
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           <DashboardMetricCard
             title="Aprovações pendentes"
             value={metrics.pendingRegistrations}

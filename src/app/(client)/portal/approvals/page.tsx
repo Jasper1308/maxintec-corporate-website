@@ -224,7 +224,7 @@ export default function ApprovalsPage() {
       {feedback && (
         <div
           role="status"
-          className="mb-5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-200"
+          className="mb-5 rounded-xl border border-emerald-400/20 bg-emerald-500/10 p-4 text-sm text-emerald-100"
         >
           {feedback}
         </div>
@@ -251,7 +251,7 @@ export default function ApprovalsPage() {
             return (
               <article
                 key={registration.id}
-                className="rounded-2xl border border-white/10 bg-slate-900/60 p-5 sm:p-6"
+                className="portal-card p-5 sm:p-6"
               >
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                   <div className="min-w-0 flex-1">
@@ -271,7 +271,7 @@ export default function ApprovalsPage() {
                       type="button"
                       disabled={Boolean(processing)}
                       onClick={() => void handleApprove(registration)}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-wait disabled:opacity-60"
+                      className="portal-button portal-button-success"
                     >
                       <Check className="h-4 w-4" />
                       {isProcessing && processing.action === 'approve'
@@ -282,7 +282,7 @@ export default function ApprovalsPage() {
                       type="button"
                       disabled={Boolean(processing)}
                       onClick={() => openRejectionModal(registration)}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm font-medium text-red-200 transition hover:bg-red-500/20 disabled:cursor-wait disabled:opacity-60"
+                      className="portal-button portal-button-danger"
                     >
                       <X className="h-4 w-4" />
                       {isProcessing && processing.action === 'reject'
@@ -322,7 +322,7 @@ export default function ApprovalsPage() {
 
           <label
             htmlFor="rejection-reason"
-            className="mt-5 block text-sm font-medium text-slate-200"
+            className="portal-label mt-5"
           >
             Motivo da rejeição
           </label>
@@ -337,7 +337,7 @@ export default function ApprovalsPage() {
             maxLength={1000}
             required
             disabled={processing?.action === 'reject'}
-            className="mt-2 w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:opacity-60"
+            className="portal-field"
             placeholder="Descreva de forma clara o que deve ser revisado."
           />
 
@@ -352,14 +352,14 @@ export default function ApprovalsPage() {
               type="button"
               onClick={closeRejectionModal}
               disabled={processing?.action === 'reject'}
-              className="rounded-xl border border-white/10 px-4 py-2.5 text-sm text-slate-300 transition hover:bg-white/5 disabled:opacity-60"
+              className="portal-button portal-button-secondary"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={Boolean(processing)}
-              className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-500 disabled:cursor-wait disabled:opacity-60"
+              className="portal-button portal-button-danger-solid"
             >
               {processing?.action === 'reject'
                 ? 'Rejeitando...'

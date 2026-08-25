@@ -92,7 +92,7 @@ export default function RegistrationsPage() {
         action={
           <Link
             href="/portal/registrations/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500"
+            className="portal-button portal-button-primary"
           >
             <Plus className="h-4 w-4" />
             Novo cadastro
@@ -117,7 +117,7 @@ export default function RegistrationsPage() {
           {registrations.map(registration => (
             <article
               key={registration.id}
-              className="rounded-2xl border border-white/10 bg-slate-900/60 p-5 sm:p-6"
+              className="portal-card p-5 sm:p-6"
             >
               <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -138,7 +138,7 @@ export default function RegistrationsPage() {
 
               {registration.status === 'rejected' &&
                 registration.rejection_reason && (
-                  <div className="mt-5 rounded-xl border border-red-500/20 bg-red-500/10 p-4">
+                  <div className="mt-5 rounded-xl border border-red-400/20 bg-red-500/10 p-4">
                     <p className="text-xs font-semibold uppercase tracking-wide text-red-300">
                       Motivo da revisão
                     </p>

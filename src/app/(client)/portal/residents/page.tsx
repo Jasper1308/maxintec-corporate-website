@@ -134,7 +134,7 @@ export default function ResidentsPage() {
         description="Consulte os moradores aprovados nos condomínios permitidos pelo seu acesso."
       />
 
-      <label className="mb-5 flex max-w-xl items-center gap-3 rounded-xl border border-white/10 bg-slate-900/60 px-4 py-3 transition focus-within:border-blue-500/60">
+      <label className="mb-5 flex min-h-11 max-w-xl items-center gap-3 rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 transition focus-within:border-blue-500 focus-within:ring-3 focus-within:ring-blue-500/10">
         <Search className="h-4 w-4 shrink-0 text-slate-500" />
         <span className="sr-only">Buscar moradores</span>
         <input
@@ -164,7 +164,7 @@ export default function ResidentsPage() {
             {filteredResidents.map(registration => (
               <article
                 key={registration.id}
-                className="rounded-2xl border border-white/10 bg-slate-900/60 p-5"
+                className="portal-card p-5"
               >
                 <h2 className="font-semibold text-white">
                   {registration.nome_completo}
@@ -202,9 +202,10 @@ export default function ResidentsPage() {
             ))}
           </div>
 
-          <div className="hidden overflow-x-auto rounded-2xl border border-white/10 bg-slate-900/60 md:block">
-            <table className="w-full min-w-[900px] text-left text-sm">
-              <thead className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+          <div className="portal-table-shell hidden md:block">
+            <div className="overflow-x-auto">
+            <table className="portal-table min-w-[900px]">
+              <thead>
                 <tr>
                   <th className="px-5 py-4 font-medium">Morador</th>
                   <th className="px-5 py-4 font-medium">Condomínio</th>
@@ -213,7 +214,7 @@ export default function ResidentsPage() {
                   <th className="px-5 py-4 font-medium">Aprovado em</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody>
                 {filteredResidents.map(registration => (
                   <tr key={registration.id} className="text-slate-300">
                     <td className="px-5 py-4">
@@ -238,6 +239,7 @@ export default function ResidentsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </>
       )}

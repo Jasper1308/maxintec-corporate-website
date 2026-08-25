@@ -46,8 +46,10 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-chave-anon-aqui
 1. No dashboard, vá para **Storage**
 2. Clique **Create new bucket**
 3. Nome: `client-documents`
-4. Deixe como Public (✓ Public bucket)
+4. Mantenha como **Private** (Public desativado)
 5. Clique **Create bucket**
+
+O acesso deve ser autorizado pelas policies do Storage e realizado por signed URLs de curta duração. Nunca torne documentos de moradores públicos.
 
 ### 6. Habilitar Email Authentication (opcional mas recomendado)
 
