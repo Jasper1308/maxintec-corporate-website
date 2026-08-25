@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -74,8 +75,16 @@ export function AuthProvider({
   const [loading, setLoading] =
     useState(true);
 
+  const mountedRef = useRef(true);
+  const identityRequestRef = useRef(0);
+
   const loadIdentity = useCallback(
-    async (currentUser: User | null) => {
+    async (
+      currentUser: User | null,
+      isCurrentRequest: () => boolean
+    ) => {
+      if (!isCurrentRequest()) return;
+
       setUser(currentUser);
 
       if (!currentUser) {
@@ -92,6 +101,8 @@ export function AuthProvider({
         getMemberships(currentUser.id),
       ]);
 
+      if (!isCurrentRequest()) return;
+
       setProfile(currentProfile);
       setMemberships(currentMemberships);
     },
@@ -100,56 +111,124 @@ export function AuthProvider({
 
   const refreshIdentity =
     useCallback(async () => {
-      const {
-        data: { user: currentUser },
-      } = await supabase.auth.getUser();
+      const requestId =
+        ++identityRequestRef.current;
 
-      await loadIdentity(currentUser);
+      const isCurrentRequest = () =>
+        mountedRef.current &&
+        identityRequestRef.current === requestId;
+
+      try {
+        const {
+          data: { user: currentUser },
+          error,
+        } = await supabase.auth.getUser();
+
+        if (error) {
+          throw error;
+        }
+
+        await loadIdentity(
+          currentUser,
+          isCurrentRequest
+        );
+      } catch (error) {
+        console.error(
+          'Failed to refresh authenticated identity:',
+          error
+        );
+        throw error;
+      } finally {
+        if (isCurrentRequest()) {
+          setLoading(false);
+        }
+      }
     }, [loadIdentity]);
 
   useEffect(() => {
     let mounted = true;
+    mountedRef.current = true;
 
     async function initialize() {
+      const requestId =
+        ++identityRequestRef.current;
+
+      const isCurrentRequest = () =>
+        mounted &&
+        identityRequestRef.current === requestId;
+
       try {
         const {
           data: { user: currentUser },
+          error,
         } = await supabase.auth.getUser();
 
-        if (!mounted) return;
+        if (error) {
+          throw error;
+        }
 
-        await loadIdentity(currentUser);
+        if (!isCurrentRequest()) return;
+
+        await loadIdentity(
+          currentUser,
+          isCurrentRequest
+        );
+      } catch (error) {
+        if (isCurrentRequest()) {
+          console.error('Failed to initialize authentication:', error);
+        }
       } finally {
-        if (mounted) {
+        if (isCurrentRequest()) {
           setLoading(false);
         }
       }
     }
 
-    initialize();
+    void initialize();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (!mounted) return;
+      (_event, session) => {
+        const requestId =
+          ++identityRequestRef.current;
+        const currentUser =
+          session?.user ?? null;
 
-        setLoading(true);
+        setTimeout(() => {
+          const isCurrentRequest = () =>
+            mounted &&
+            identityRequestRef.current === requestId;
 
-        try {
-          await loadIdentity(
-            session?.user ?? null
-          );
-        } finally {
-          if (mounted) {
-            setLoading(false);
-          }
-        }
+          if (!isCurrentRequest()) return;
+
+          setLoading(true);
+
+          void loadIdentity(
+            currentUser,
+            isCurrentRequest
+          )
+            .catch(error => {
+              if (isCurrentRequest()) {
+                console.error(
+                  'Failed to refresh authenticated identity:',
+                  error
+                );
+              }
+            })
+            .finally(() => {
+              if (isCurrentRequest()) {
+                setLoading(false);
+              }
+            });
+        }, 0);
       }
     );
 
     return () => {
       mounted = false;
+      mountedRef.current = false;
+      identityRequestRef.current += 1;
       subscription.unsubscribe();
     };
   }, [loadIdentity]);
@@ -200,7 +279,12 @@ export function AuthProvider({
 
   const signOut =
     useCallback(async () => {
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error('Failed to sign out:', error);
+        return;
+      }
 
       router.replace('/login');
       router.refresh();

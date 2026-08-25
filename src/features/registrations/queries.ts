@@ -26,6 +26,13 @@ const registrationSelect = `
     id,
     name,
     slug
+  ),
+  files:registration_files (
+    id,
+    registration_id,
+    storage_path,
+    kind,
+    created_at
   )
 `;
 

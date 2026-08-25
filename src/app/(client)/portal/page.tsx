@@ -1,126 +1,161 @@
 'use client';
 
-import Link from 'next/link';
-
 import {
+  Bell,
   Building2,
+  CircleCheckBig,
   ClipboardCheck,
+  ClipboardList,
   Ticket,
   Users,
 } from 'lucide-react';
 
+import { ErrorState, LoadingState } from '@/components/portal/PortalStates';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { DashboardMetricCard } from '@/features/dashboard/components/DashboardMetricCard';
+import { useDashboardMetrics } from '@/features/dashboard/useDashboardMetrics';
+import type { RegistrationStatus } from '@/features/registrations/types';
 
-const cards = [
-  {
-    title: 'Chamados',
-    description:
-      'Acompanhe solicitações e atendimentos.',
-    href: '/portal/tickets',
-    icon: Ticket,
-    access: 'all',
-  },
-  {
-    title: 'Aprovações',
-    description:
-      'Cadastros aguardando análise.',
-    href: '/portal/approvals',
-    icon: ClipboardCheck,
-    access: 'manager',
-  },
-  {
-    title: 'Moradores',
-    description:
-      'Gerencie moradores e vínculos.',
-    href: '/portal/residents',
-    icon: Users,
-    access: 'manager',
-  },
-  {
-    title: 'Condomínios',
-    description:
-      'Administre os clientes da plataforma.',
-    href: '/portal/condominiums',
-    icon: Building2,
-    access: 'admin',
-  },
-];
+const registrationStatusLabels: Record<RegistrationStatus, string> = {
+  pending: 'Aguardando aprovação',
+  approved: 'Aprovado',
+  rejected: 'Precisa de revisão',
+  cancelled: 'Cancelado',
+};
 
 export default function PortalPage() {
   const {
+    user,
     profile,
     isAdmin,
     isManager,
   } = useAuth();
 
-  const visibleCards =
-    cards.filter(card => {
-      if (card.access === 'all') {
-        return true;
-      }
+  const {
+    metrics,
+    loading,
+    error,
+    refresh,
+  } = useDashboardMetrics(Boolean(user));
 
-      if (card.access === 'admin') {
-        return isAdmin;
-      }
-
-      if (card.access === 'manager') {
-        return isManager;
-      }
-
-      return false;
-    });
+  const hasManagementView = isAdmin || isManager;
+  const registrationStatus = metrics?.latestRegistrationStatus;
 
   return (
     <div className="mx-auto max-w-7xl">
       <div className="mb-8">
-        <p className="text-sm font-medium text-blue-400">
-          Área do Cliente
-        </p>
+        <p className="text-sm font-medium text-blue-400">Área do Cliente</p>
 
         <h1 className="mt-2 text-3xl font-bold tracking-tight">
-          Olá,{' '}
-          {profile?.full_name ??
-            'bem-vindo'}
+          Olá, {profile?.full_name ?? 'bem-vindo'}
         </h1>
 
         <p className="mt-2 text-slate-400">
           {isAdmin
             ? 'Visão geral da operação MaxInTec.'
             : isManager
-              ? 'Gerencie seu condomínio e acompanhe as solicitações.'
-              : 'Acompanhe seus serviços e solicitações.'}
+              ? 'Acompanhe os indicadores dos condomínios sob sua gestão.'
+              : 'Acompanhe seu cadastro, seus chamados e suas notificações.'}
         </p>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        {visibleCards.map(card => {
-          const Icon = card.icon;
+      {loading && <LoadingState />}
 
-          return (
-            <Link
-              href={card.href}
-              key={card.href}
-              className="group rounded-2xl border border-white/10 bg-slate-900/60 p-6 transition hover:border-blue-500/40 hover:bg-slate-900"
-            >
-              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
-                <Icon className="h-5 w-5" />
-              </div>
+      {!loading && error && (
+        <ErrorState
+          message={error}
+          retry={() => {
+            void refresh();
+          }}
+        />
+      )}
 
-              <h2 className="font-semibold text-white">
-                {card.title}
-              </h2>
+      {!loading && !error && metrics && hasManagementView && (
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
+          <DashboardMetricCard
+            title="Aprovações pendentes"
+            value={metrics.pendingRegistrations}
+            description="Cadastros aguardando análise nas áreas permitidas para você."
+            href="/portal/approvals"
+            icon={<ClipboardCheck className="h-5 w-5" />}
+          />
 
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                {card.description}
-              </p>
+          <DashboardMetricCard
+            title="Moradores aprovados"
+            value={metrics.approvedResidents}
+            description="Moradores aprovados visíveis pela sua sessão."
+            href="/portal/residents"
+            icon={<Users className="h-5 w-5" />}
+          />
 
-              <p className="mt-5 text-sm font-medium text-blue-400">
-                Acessar →
-              </p>
-            </Link>
-          );
-        })}
-      </div>
+          <DashboardMetricCard
+            title="Chamados abertos"
+            value={metrics.openTickets}
+            description="Chamados abertos, em andamento ou aguardando retorno."
+            href="/portal/tickets"
+            icon={<Ticket className="h-5 w-5" />}
+          />
+
+          <DashboardMetricCard
+            title="Chamados resolvidos"
+            value={metrics.resolvedTickets}
+            description="Solicitações que já foram marcadas como resolvidas."
+            href="/portal/tickets"
+            icon={<CircleCheckBig className="h-5 w-5" />}
+          />
+
+          <DashboardMetricCard
+            title="Condomínios ativos"
+            value={metrics.activeCondominiums}
+            description="Condomínios ativos que as políticas permitem visualizar."
+            href={isAdmin ? '/portal/condominiums' : undefined}
+            icon={<Building2 className="h-5 w-5" />}
+          />
+        </div>
+      )}
+
+      {!loading && !error && metrics && !hasManagementView && (
+        <div className="grid gap-5 md:grid-cols-3">
+          <DashboardMetricCard
+            title="Meu cadastro"
+            value={
+              registrationStatus
+                ? registrationStatusLabels[registrationStatus]
+                : 'Não enviado'
+            }
+            description={
+              registrationStatus === 'rejected'
+                ? 'Consulte o motivo informado e revise seus dados.'
+                : metrics.totalRegistrations > 0
+                  ? 'Consulte os detalhes e acompanhe a análise do seu cadastro.'
+                  : 'Envie seu cadastro para se vincular ao condomínio.'
+            }
+            href="/portal/registrations"
+            icon={<ClipboardList className="h-5 w-5" />}
+          />
+
+          <DashboardMetricCard
+            title="Meus chamados"
+            value={metrics.totalTickets}
+            description={`${metrics.openTickets} ${
+              metrics.openTickets === 1 ? 'chamado ativo' : 'chamados ativos'
+            } no momento.`}
+            href="/portal/tickets"
+            icon={<Ticket className="h-5 w-5" />}
+          />
+
+          <DashboardMetricCard
+            title="Notificações"
+            value={metrics.unreadNotifications}
+            description={
+              metrics.unreadNotifications === 1
+                ? 'Você tem uma notificação não lida. Abra o sino no topo.'
+                : `Você tem ${metrics.unreadNotifications} notificações não lidas. Abra o sino no topo.`
+            }
+            icon={<Bell className="h-5 w-5" />}
+          />
+        </div>
+      )}
     </div>
   );
 }

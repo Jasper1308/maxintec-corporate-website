@@ -8,13 +8,13 @@ export default function PortalLayout({
 }) {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen flex-col md:flex-row">
         <PortalSidebar />
 
         <div className="min-w-0 flex-1">
           <PortalHeader />
 
-          <main className="p-6 lg:p-8">
+          <main className="p-4 sm:p-6 lg:p-8">
             {children}
           </main>
         </div>

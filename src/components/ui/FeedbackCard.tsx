@@ -37,7 +37,7 @@ export default function FeedbackCard({
                 ))}
             </div>
             <p className="text-gray-200 text-sm leading-relaxed italic">
-                "{text}"
+                “{text}”
             </p>
         </div>
     )

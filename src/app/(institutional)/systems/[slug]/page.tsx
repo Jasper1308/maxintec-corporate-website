@@ -6,6 +6,10 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export function generateStaticParams() {
+  return Object.keys(systemContent).map(slug => ({ slug }));
+}
+
 export default async function SistemaDynamicPage({ params }: PageProps) {
   const { slug } = await params;
   const system = systemContent[slug];
@@ -55,7 +59,7 @@ export default async function SistemaDynamicPage({ params }: PageProps) {
           </div>
           
           <div className="grid gap-6 md:grid-cols-4 relative">
-            {system.ecossistema.map((step: any, index: number) => (
+            {system.ecossistema.map((step, index) => (
               <div key={index} className="relative rounded-2xl border border-white/5 bg-slate-900/40 p-6 flex flex-col justify-between">
                 <div className="space-y-4">
                   <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-sm font-bold text-white shadow-lg shadow-blue-600/20">
@@ -79,7 +83,7 @@ export default async function SistemaDynamicPage({ params }: PageProps) {
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {system.equipamentos.map((equip: any, index: number) => (
+              {system.equipamentos.map((equip, index) => (
                 <div 
                   key={index} 
                   className="rounded-2xl border border-white/10 bg-slate-950/60 p-6 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/40 hover:shadow-xl hover:shadow-blue-950/20 group"
@@ -101,7 +105,7 @@ export default async function SistemaDynamicPage({ params }: PageProps) {
             <h3 className="text-xl font-bold text-white tracking-wide">Padrões Operacionais</h3>
             {system.specs && system.specs.length > 0 ? (
               <div className="rounded-2xl border border-white/5 overflow-hidden bg-slate-900/20">
-                {system.specs.map((spec: any, index: number) => (
+                {system.specs.map((spec, index) => (
                   <div key={index} className="grid grid-cols-2 p-4 text-sm border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
                     <span className="font-semibold text-slate-300">{spec.label}</span>
                     <span className="text-slate-400 text-right">{spec.value}</span>

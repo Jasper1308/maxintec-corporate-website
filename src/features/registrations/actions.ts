@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase/client';
 
 export async function approveRegistration(
   registrationId: string
-) {
+): Promise<void> {
   const { error } = await supabase.rpc(
     'approve_registration',
     {
@@ -17,13 +17,19 @@ export async function approveRegistration(
 
 export async function rejectRegistration(
   registrationId: string,
-  reason?: string
-) {
+  reason: string
+): Promise<void> {
+  const normalizedReason = reason.trim();
+
+  if (!normalizedReason) {
+    throw new Error('Informe o motivo da rejeição.');
+  }
+
   const { error } = await supabase.rpc(
     'reject_registration',
     {
       p_registration_id: registrationId,
-      p_reason: reason ?? null,
+      p_reason: normalizedReason,
     }
   );
 

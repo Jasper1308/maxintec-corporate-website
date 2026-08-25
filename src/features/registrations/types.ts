@@ -4,15 +4,34 @@ export type RegistrationStatus =
   | 'rejected'
   | 'cancelled';
 
+export type ResidentType =
+  | 'morador'
+  | 'locatario'
+  | 'dependente';
+
+export interface RegistrationCondominium {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface RegistrationFile {
+  id: string;
+  registration_id: string;
+  storage_path: string;
+  kind: string;
+  created_at: string;
+}
+
 export interface Registration {
   id: string;
   user_id: string | null;
-  condominium_id: string;
+  condominium_id: string | null;
 
-  condominio: string;
-  bloco: string;
+  condominio: string | null;
+  bloco: string | null;
   apartamento: string;
-  tipo_residente: string;
+  tipo_residente: ResidentType;
 
   cpf: string;
   nome_completo: string;
@@ -34,9 +53,12 @@ export interface Registration {
   created_at: string;
   updated_at: string;
 
-  condominium?: {
-    id: string;
-    name: string;
-    slug: string;
-  } | null;
+  condominium: RegistrationCondominium | null;
+  files: RegistrationFile[];
+}
+
+export interface RegistrationDocument {
+  kind: 'photo' | 'document';
+  label: string;
+  path: string;
 }
