@@ -88,6 +88,7 @@ describe('CondominiumRegistrationForm', () => {
     await user.type(screen.getByLabelText(/Nome completo/), 'Resident A');
     await user.type(screen.getByLabelText(/CPF/), '12345678901');
     await user.type(screen.getByLabelText(/Telefone/), '48999998888');
+    await user.click(screen.getByRole('checkbox', { name: /Política de Privacidade/ }));
 
     await user.click(screen.getByRole('button', { name: 'Enviar cadastro' }));
 
@@ -104,11 +105,25 @@ describe('CondominiumRegistrationForm', () => {
         email: 'resident-a@example.test',
         photo: null,
         documents: [],
+        privacyAccepted: true,
       });
     });
     expect(screen.getByRole('status')).toHaveTextContent(
       'Cadastro enviado. Acompanhe a análise em Meu cadastro.'
     );
+  });
+
+  it('requires explicit privacy awareness before submission', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<CondominiumRegistrationForm />);
+    await user.selectOptions(await screen.findByLabelText(/Condomínio/), 'condominium-a');
+    await user.selectOptions(screen.getByLabelText(/Bloco/), 'Torre 1');
+    await user.type(screen.getByLabelText(/Apartamento/), '101');
+    await user.type(screen.getByLabelText(/Nome completo/), 'Resident A');
+    await user.type(screen.getByLabelText(/CPF/), '12345678901');
+    fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+    expect(await screen.findByRole('alert')).toHaveTextContent('Política de Privacidade');
+    expect(submitRegistrationMock).not.toHaveBeenCalled();
   });
 
   it('surfaces condominium loading errors and never renders a usable form', async () => {

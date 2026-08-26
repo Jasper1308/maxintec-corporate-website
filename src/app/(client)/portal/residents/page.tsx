@@ -86,7 +86,7 @@ export default function ResidentsPage() {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <PageHeader title="Moradores" description="Consulte cadastros aprovados no escopo permitido pela RLS." />
+      <PageHeader title="Moradores" description="Consulte os moradores aprovados nos condomínios que você administra." />
 
       <form onSubmit={applyFilters} className="portal-card mb-5 grid gap-4 p-4 md:grid-cols-[minmax(14rem,2fr)_minmax(11rem,1fr)_minmax(10rem,1fr)_auto] md:items-end">
         <label className="portal-label">Busca

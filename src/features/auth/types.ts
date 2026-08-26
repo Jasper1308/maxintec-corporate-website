@@ -14,6 +14,7 @@ export interface Profile {
   full_name: string | null;
   email: string | null;
   phone: string | null;
+  avatar_path: string | null;
   global_role: GlobalRole;
   created_at: string;
   updated_at: string;

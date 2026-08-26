@@ -7,6 +7,7 @@ import {
   LogOut,
   UserRound,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   useEffect,
@@ -15,6 +16,7 @@ import {
 } from 'react';
 
 import { useAuth } from '@/features/auth/AuthProvider';
+import { useAvatarUrl } from '@/features/auth/useAvatarUrl';
 import type { PortalNotification } from '@/features/notifications/types';
 import { useNotifications } from '@/features/notifications/useNotifications';
 import { formatDateTime } from '@/lib/format';
@@ -58,6 +60,7 @@ export default function PortalHeader() {
     isManager,
     signOut,
   } = useAuth();
+  const avatarUrl = useAvatarUrl(profile?.avatar_path);
 
   const {
     notifications,
@@ -122,8 +125,8 @@ export default function PortalHeader() {
   return (
     <header className="sticky top-0 z-40 flex min-h-18 items-center justify-between border-b border-white/10 bg-slate-950/80 px-4 py-3 backdrop-blur-xl sm:px-6 md:min-h-20">
       <div className="flex min-w-0 items-center gap-3">
-        <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-400/15 bg-blue-500/10 text-blue-300 sm:flex">
-          <UserRound className="h-4.5 w-4.5" />
+        <span className="relative hidden h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-blue-400/15 bg-blue-500/10 text-blue-300 sm:flex">
+          {avatarUrl ? <Image src={avatarUrl} alt="Imagem de perfil" fill unoptimized className="object-cover" /> : <UserRound className="h-4.5 w-4.5" />}
         </span>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-white">

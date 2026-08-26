@@ -8,9 +8,10 @@ interface ModalProps {
   title: string;
   children: ReactNode;
   onClose: () => void;
+  size?: 'default' | 'wide';
 }
 
-export function Modal({ open, title, children, onClose }: ModalProps) {
+export function Modal({ open, title, children, onClose, size = 'default' }: ModalProps) {
   const titleId = useId();
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export function Modal({ open, title, children, onClose }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="portal-card portal-popover max-h-[92vh] w-full max-w-2xl overflow-y-auto p-5 shadow-2xl shadow-black/40 sm:p-6"
+        className={`portal-card portal-popover max-h-[92vh] w-full overflow-y-auto p-5 shadow-2xl shadow-black/40 sm:p-6 ${size === 'wide' ? 'max-w-6xl' : 'max-w-2xl'}`}
       >
         <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/10 pb-4">
           <h2 id={titleId} className="text-xl font-semibold tracking-tight text-white">

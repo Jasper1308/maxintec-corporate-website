@@ -19,7 +19,7 @@ const inputClass = 'portal-field';
 const emptyForm = (email = ''): RegistrationFormValues => ({
   condominiumId: '', condominiumName: '', block: '', apartment: '',
   residentType: 'morador', cpf: '', fullName: '', phone: '', email,
-  photo: null, documents: [],
+  photo: null, documents: [], privacyAccepted: false,
 });
 
 function formatCpfInput(value: string): string {
@@ -74,13 +74,14 @@ export function CondominiumRegistrationForm() {
   useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
 
   function updateField(event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    const { name, value } = event.target;
+    const { name, value, type } = event.target;
     if (name === 'condominiumId') {
       const condominium = options.find(option => option.id === value);
       setForm(current => ({ ...current, condominiumId: value, condominiumName: condominium?.name ?? '', block: '' }));
       return;
     }
-    setForm(current => ({ ...current, [name]: name === 'cpf' ? formatCpfInput(value) : name === 'phone' ? formatPhoneInput(value) : value }));
+    const nextValue = type === 'checkbox' && event.target instanceof HTMLInputElement ? event.target.checked : value;
+    setForm(current => ({ ...current, [name]: name === 'cpf' ? formatCpfInput(value) : name === 'phone' ? formatPhoneInput(value) : nextValue }));
   }
 
   function selectPhoto(event: ChangeEvent<HTMLInputElement>) {
@@ -109,6 +110,7 @@ export function CondominiumRegistrationForm() {
     setError(null); setSuccess(false);
     if (!form.condominiumId || !form.block || !form.apartment.trim() || !form.fullName.trim()) return setError('Preencha todos os campos obrigatórios.');
     if (form.cpf.replace(/\D/g, '').length !== 11) return setError('Informe um CPF com 11 dígitos.');
+    if (!form.privacyAccepted) return setError('Confirme que está ciente da Política de Privacidade.');
     setSubmitting(true);
     try {
       await submitRegistration(form);
@@ -144,6 +146,7 @@ export function CondominiumRegistrationForm() {
         <div className="rounded-xl border border-dashed border-white/15 bg-slate-950/30 p-5 text-center transition hover:border-blue-400/30"><input ref={photoInput} type="file" accept="image/*" onChange={selectPhoto} className="hidden" />{preview ? <div className="relative mx-auto mb-3 h-24 w-24 overflow-hidden rounded-full ring-2 ring-blue-400/30"><Image src={preview} alt="Prévia da foto" fill unoptimized className="object-cover" /></div> : <><ImagePlus className="mx-auto mb-3 h-6 w-6 text-blue-300" /><p className="mb-3 text-sm text-slate-400">Foto cadastral (até 5 MB)</p></>}<button type="button" onClick={() => photoInput.current?.click()} className="portal-button portal-button-secondary">Escolher foto</button></div>
         <div className="rounded-xl border border-dashed border-white/15 bg-slate-950/30 p-5 text-center transition hover:border-blue-400/30"><input ref={documentInput} type="file" accept="application/pdf" multiple onChange={selectDocuments} className="hidden" /><FileUp className="mx-auto mb-3 h-6 w-6 text-blue-300" /><p className="mb-3 text-sm text-slate-400">Comprovantes em PDF (até 10 MB cada)</p><button type="button" onClick={() => documentInput.current?.click()} className="portal-button portal-button-secondary">Anexar PDFs</button></div>
       </div>{form.documents.length > 0 && <ul className="mt-4 space-y-2 text-sm text-slate-300">{form.documents.map((document, index) => <li key={`${document.name}-${index}`} className="flex items-center justify-between gap-3 rounded-lg bg-slate-950/60 px-3 py-2"><span className="min-w-0 truncate">{document.name}</span><button type="button" onClick={() => setForm(current => ({ ...current, documents: current.documents.filter((_, itemIndex) => itemIndex !== index) }))} className="min-h-9 shrink-0 rounded-lg px-2 text-xs font-semibold text-red-300 transition hover:bg-red-500/10 hover:text-red-200">Remover</button></li>)}</ul>}</fieldset>
+      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-slate-950/40 p-4 text-sm leading-6 text-slate-300"><input type="checkbox" name="privacyAccepted" checked={form.privacyAccepted} onChange={updateField} required disabled={submitting} className="mt-1 h-4 w-4 shrink-0 accent-blue-500" /><span>Li e estou ciente do tratamento dos meus dados conforme a <Link href="/privacy-policy" target="_blank" className="font-medium text-blue-300 underline hover:text-blue-200">Política de Privacidade</Link>.</span></label>
       <button type="submit" disabled={submitting || options.length === 0} className="portal-button portal-button-primary w-full">{submitting ? 'Enviando cadastro...' : 'Enviar cadastro'}</button>
     </form>
   </div>;

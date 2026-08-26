@@ -15,7 +15,6 @@
 
 No terminal WSL/bash:
 ```bash
-cd /home/adrianjasper/projects/maxintec-corporate-website
 npm install @supabase/supabase-js
 ```
 

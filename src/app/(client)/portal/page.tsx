@@ -104,7 +104,7 @@ export default function PortalPage() {
           <DashboardMetricCard
             title="Chamados urgentes"
             value={metrics.urgentTickets}
-            description="Chamados urgentes ainda ativos no escopo permitido."
+              description="Chamados urgentes que precisam de atenção."
             href="/portal/tickets"
             icon={<Ticket className="h-5 w-5" />}
           />

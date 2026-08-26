@@ -70,12 +70,17 @@ export const supabaseMock = {
     signUp: vi.fn(),
     signInWithPassword: vi.fn(),
     signOut: vi.fn(),
+    resetPasswordForEmail: vi.fn(),
+    updateUser: vi.fn(),
     onAuthStateChange: vi.fn(),
   },
   from: vi.fn(),
   rpc: vi.fn(),
   storage: {
     from: vi.fn(),
+  },
+  functions: {
+    invoke: vi.fn(),
   },
   channel: vi.fn(),
   removeChannel: vi.fn(),
@@ -122,6 +127,8 @@ export function resetSupabaseMock() {
     error: null,
   });
   supabaseMock.auth.signOut.mockResolvedValue({ error: null });
+  supabaseMock.auth.resetPasswordForEmail.mockResolvedValue({ data: null, error: null });
+  supabaseMock.auth.updateUser.mockResolvedValue({ data: null, error: null });
   supabaseMock.auth.onAuthStateChange.mockImplementation(callback => {
     authStateCallback = callback as AuthStateCallback;
     return {
@@ -141,6 +148,7 @@ export function resetSupabaseMock() {
     error: null,
   });
   supabaseMock.storage.from.mockReturnValue(storageBucketMock);
+  supabaseMock.functions.invoke.mockResolvedValue({ data: null, error: null });
 
   realtimeChannelMock.on.mockReturnValue(realtimeChannelMock);
   realtimeChannelMock.subscribe.mockReturnValue(realtimeChannelMock);

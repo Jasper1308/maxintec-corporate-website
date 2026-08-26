@@ -1,5 +1,7 @@
 'use client';
 
+import { Download, Paperclip } from 'lucide-react';
+
 import {
   useCallback,
   useEffect,
@@ -22,6 +24,7 @@ import {
   updateTicketPriority,
   updateTicketStatus,
 } from '../actions';
+import { createTicketAttachmentUrl, getTicketAttachments } from '../attachments';
 import { getTicketErrorMessage } from '../errors';
 import { getTicketEvents } from '../queries';
 import {
@@ -31,6 +34,7 @@ import {
   ticketStatuses,
   ticketStatusLabels,
   type Ticket,
+  type TicketAttachment,
   type TicketEvent,
   type TicketPriority,
   type TicketProfile,
@@ -59,6 +63,7 @@ const eventLabels: Record<string, string> = {
   priority_change: 'Prioridade alterada',
   assigned: 'Responsável alterado',
   assignment_changed: 'Responsável alterado',
+  attachment_added: 'Anexo adicionado',
 };
 
 function eventLabel(eventType: string): string {
@@ -82,6 +87,7 @@ export function TicketDetailModal({
   onTicketChanged,
 }: TicketDetailModalProps) {
   const [events, setEvents] = useState<TicketEvent[]>([]);
+  const [attachments, setAttachments] = useState<TicketAttachment[]>([]);
   const [eventsLoading, setEventsLoading] = useState(false);
   const [eventsError, setEventsError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -95,7 +101,12 @@ export function TicketDetailModal({
     setEventsError(null);
 
     try {
-      setEvents(await getTicketEvents(ticket.id));
+      const [nextEvents, nextAttachments] = await Promise.all([
+        getTicketEvents(ticket.id),
+        getTicketAttachments(ticket.id),
+      ]);
+      setEvents(nextEvents);
+      setAttachments(nextAttachments);
     } catch (error) {
       console.error('Failed to load ticket events:', error);
       setEventsError(
@@ -187,6 +198,17 @@ export function TicketDetailModal({
     setComment('');
     setActionError(null);
     onClose();
+  }
+
+  async function openAttachment(attachment: TicketAttachment) {
+    setActionError(null);
+    try {
+      const url = await createTicketAttachmentUrl(attachment);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error('Failed to open ticket attachment:', error);
+      setActionError('Não foi possível abrir o anexo. Tente novamente.');
+    }
   }
 
   return (
@@ -326,6 +348,13 @@ export function TicketDetailModal({
             )}
           </section>
         )}
+
+        <section>
+          <h3 className="flex items-center gap-2 font-semibold text-white"><Paperclip className="h-4 w-4 text-blue-300" />Anexos</h3>
+          <div className="mt-4">
+            {eventsLoading ? <LoadingState /> : attachments.length === 0 ? <p className="text-sm text-slate-500">Nenhum anexo neste chamado.</p> : <ul className="divide-y divide-white/10 rounded-xl border border-white/10">{attachments.map(attachment => <li key={attachment.id} className="flex flex-wrap items-center justify-between gap-3 p-3"><div className="min-w-0"><p className="truncate text-sm font-medium text-slate-200">{attachment.original_name}</p><p className="mt-1 text-xs text-slate-500">{(attachment.size_bytes / 1024 / 1024).toFixed(1)} MB · {formatDateTime(attachment.created_at)}</p></div><button type="button" onClick={() => void openAttachment(attachment)} className="portal-button portal-button-secondary min-h-9 px-3"><Download className="h-3.5 w-3.5" />{attachment.mime_type === 'application/pdf' ? 'Baixar' : 'Visualizar'}</button></li>)}</ul>}
+          </div>
+        </section>
 
         <section>
           <h3 className="font-semibold text-white">Histórico</h3>

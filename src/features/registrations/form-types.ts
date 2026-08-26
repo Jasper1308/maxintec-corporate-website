@@ -18,4 +18,5 @@ export interface RegistrationFormValues {
   email: string;
   photo: File | null;
   documents: File[];
+  privacyAccepted: boolean;
 }

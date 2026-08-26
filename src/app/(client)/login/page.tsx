@@ -62,6 +62,11 @@ export default function LoginPage() {
                 className="w-full px-4 py-2 bg-slate-900/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 disabled:opacity-50"
                 placeholder="seu@email.com"
               />
+              <div className="mt-2 text-right">
+                <Link href="/forgot-password" className="text-sm text-blue-400 transition hover:text-blue-300">
+                  Esqueci minha senha
+                </Link>
+              </div>
             </div>
 
             <div>

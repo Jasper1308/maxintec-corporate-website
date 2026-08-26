@@ -20,6 +20,9 @@ async function uploadFile(file: File, path: string): Promise<string> {
 }
 
 export async function submitRegistration(values: RegistrationFormValues): Promise<void> {
+  if (!values.privacyAccepted) {
+    throw new Error('Confirme que está ciente da Política de Privacidade.');
+  }
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   if (authError || !user) {
@@ -60,6 +63,7 @@ export async function submitRegistration(values: RegistrationFormValues): Promis
       foto_path: photoPath,
       documentos_paths: documentPaths,
       status: 'pending',
+      privacy_policy_version: '2026-08-26',
     });
 
     if (error) throw error;

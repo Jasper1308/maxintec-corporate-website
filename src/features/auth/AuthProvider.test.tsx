@@ -45,6 +45,7 @@ function profile(id: string, globalRole: Profile['global_role'] = 'user'): Profi
     full_name: id,
     email: `${id}@example.test`,
     phone: null,
+    avatar_path: null,
     global_role: globalRole,
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',

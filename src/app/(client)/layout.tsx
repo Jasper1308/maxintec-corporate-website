@@ -9,16 +9,18 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isAuthPage = pathname === '/login' || pathname === '/signup';
+  const publicPages = ['/login', '/signup', '/forgot-password', '/reset-password', '/accept-invite', '/privacy-policy'];
+  const isPublicPage = publicPages.includes(pathname);
+  const isEntryPage = pathname === '/login' || pathname === '/signup';
 
   useEffect(() => {
-    if (!loading && !user && !isAuthPage) {
+    if (!loading && !user && !isPublicPage) {
       router.push('/login');
     }
-    if (!loading && user && isAuthPage) {
+    if (!loading && user && isEntryPage) {
       router.replace('/portal');
     }
-  }, [user, loading, router, isAuthPage]);
+  }, [user, loading, router, isPublicPage, isEntryPage]);
 
   if (loading) {
     return (
@@ -28,7 +30,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (isAuthPage) {
+  if (isPublicPage) {
     return <>{children}</>;
   }
 

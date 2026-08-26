@@ -71,6 +71,17 @@ export interface TicketEvent {
   actor: TicketProfile | null;
 }
 
+export interface TicketAttachment {
+  id: string;
+  ticket_id: string;
+  uploaded_by: string;
+  storage_path: string;
+  original_name: string;
+  mime_type: string;
+  size_bytes: number;
+  created_at: string;
+}
+
 export interface CreateTicketInput {
   condominiumId: string;
   category: TicketCategory;
