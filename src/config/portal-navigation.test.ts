@@ -14,6 +14,7 @@ describe('portal permission matrix', () => {
       '/portal',
       '/portal/registrations',
       '/portal/tickets',
+      '/portal/profile',
     ]);
   });
 
@@ -22,6 +23,7 @@ describe('portal permission matrix', () => {
       '/portal',
       '/portal/registrations',
       '/portal/tickets',
+      '/portal/profile',
       '/portal/approvals',
       '/portal/residents',
     ]);

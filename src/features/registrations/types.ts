@@ -62,3 +62,27 @@ export interface RegistrationDocument {
   label: string;
   path: string;
 }
+
+export type ResidentListItem = Pick<
+  Registration,
+  | 'id'
+  | 'condominium_id'
+  | 'condominio'
+  | 'bloco'
+  | 'apartamento'
+  | 'tipo_residente'
+  | 'nome_completo'
+  | 'telefone'
+  | 'email'
+  | 'status'
+  | 'approved_at'
+  | 'condominium'
+>;
+
+export interface ResidentListFilters {
+  page: number;
+  pageSize: number;
+  search?: string;
+  condominiumId?: string;
+  block?: string;
+}

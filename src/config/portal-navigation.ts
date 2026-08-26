@@ -56,6 +56,11 @@ export const portalNavigation:
     permission: 'authenticated',
   },
   {
+    label: 'Meu perfil',
+    href: '/portal/profile',
+    permission: 'authenticated',
+  },
+  {
     label: 'Aprovações',
     href: '/portal/approvals',
     permission: 'manager',

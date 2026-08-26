@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 
-import { Plus } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 
 import { PageHeader } from '@/components/portal/PageHeader';
+import { Pagination } from '@/components/portal/Pagination';
 import {
   EmptyState,
   ErrorState,
@@ -18,27 +19,55 @@ import { getTicketErrorMessage } from '@/features/tickets/errors';
 import {
   getActiveCondominiums,
   getAdminProfiles,
-  getTickets,
+  getTicketsPage,
 } from '@/features/tickets/queries';
 import {
+  ticketCategories,
+  ticketCategoryLabels,
+  ticketPriorities,
+  ticketPriorityLabels,
   ticketStatuses,
   ticketStatusLabels,
   type Ticket,
+  type TicketCategory,
   type TicketCondominium,
+  type TicketListFilters,
+  type TicketPriority,
   type TicketProfile,
   type TicketStatus,
 } from '@/features/tickets/types';
 
-type StatusFilter = 'all' | TicketStatus;
+const PAGE_SIZE = 25;
+
+interface DraftFilters {
+  search: string;
+  status: '' | TicketStatus;
+  priority: '' | TicketPriority;
+  category: '' | TicketCategory;
+  condominiumId: string;
+  assignedTo: string;
+}
+
+const emptyFilters: DraftFilters = {
+  search: '',
+  status: '',
+  priority: '',
+  category: '',
+  condominiumId: '',
+  assignedTo: '',
+};
 
 export default function TicketsPage() {
   const { user, memberships, isAdmin, isManager } = useAuth();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [draftFilters, setDraftFilters] = useState<DraftFilters>(emptyFilters);
+  const [filters, setFilters] = useState<DraftFilters>(emptyFilters);
   const [newTicketOpen, setNewTicketOpen] = useState(false);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
   const [adminCondominiums, setAdminCondominiums] = useState<
     TicketCondominium[]
@@ -56,7 +85,19 @@ export default function TicketsPage() {
     setError(null);
 
     try {
-      setTickets(await getTickets());
+      const queryFilters: TicketListFilters = {
+        page,
+        pageSize: PAGE_SIZE,
+        search: filters.search || undefined,
+        status: filters.status || undefined,
+        priority: filters.priority || undefined,
+        category: filters.category || undefined,
+        condominiumId: filters.condominiumId || undefined,
+        assignedTo: filters.assignedTo || undefined,
+      };
+      const result = await getTicketsPage(queryFilters);
+      setTickets(result.items);
+      setTotal(result.total);
     } catch (caughtError) {
       console.error('Failed to load tickets:', caughtError);
       setError(
@@ -70,10 +111,10 @@ export default function TicketsPage() {
         setLoading(false);
       }
     }
-  }, []);
+  }, [filters, page]);
 
   const loadAdminSupportingData = useCallback(async () => {
-    if (!isAdmin) {
+    if (!isManager) {
       setAdminCondominiums([]);
       setAdminProfiles([]);
       setSupportingDataError(null);
@@ -85,7 +126,7 @@ export default function TicketsPage() {
     setSupportingDataError(null);
 
     const [condominiumsResult, profilesResult] = await Promise.allSettled([
-      getActiveCondominiums(),
+      isAdmin ? getActiveCondominiums() : Promise.resolve([]),
       getAdminProfiles(),
     ]);
 
@@ -120,7 +161,7 @@ export default function TicketsPage() {
     }
 
     setSupportingDataLoading(false);
-  }, [isAdmin]);
+  }, [isAdmin, isManager]);
 
   useEffect(() => {
     if (!user) return;
@@ -164,14 +205,6 @@ export default function TicketsPage() {
     ? adminCondominiums
     : membershipCondominiums;
 
-  const filteredTickets = useMemo(
-    () =>
-      statusFilter === 'all'
-        ? tickets
-        : tickets.filter(ticket => ticket.status === statusFilter),
-    [tickets, statusFilter]
-  );
-
   const selectedTicket = useMemo(
     () => tickets.find(ticket => ticket.id === selectedTicketId) ?? null,
     [tickets, selectedTicketId]
@@ -179,6 +212,12 @@ export default function TicketsPage() {
 
   async function handleCreated() {
     await loadTickets(false);
+  }
+
+  function applyFilters(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPage(1);
+    setFilters(draftFilters);
   }
 
   return (
@@ -198,7 +237,7 @@ export default function TicketsPage() {
         }
       />
 
-      {supportingDataError && isAdmin && (
+      {supportingDataError && isManager && (
         <div className="mb-5">
           <ErrorState
             message={supportingDataError}
@@ -207,51 +246,28 @@ export default function TicketsPage() {
         </div>
       )}
 
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-slate-400">
-          {tickets.length}{' '}
-          {tickets.length === 1 ? 'chamado disponível' : 'chamados disponíveis'}
-        </p>
-        <label className="flex items-center gap-2 text-sm font-medium text-slate-400">
-          Status
-          <select
-            value={statusFilter}
-            onChange={event =>
-              setStatusFilter(event.target.value as StatusFilter)
-            }
-            className="portal-field mt-0 min-h-10 w-auto min-w-36 py-2"
-          >
-            <option value="all">Todos</option>
-            {ticketStatuses.map(status => (
-              <option key={status} value={status}>
-                {ticketStatusLabels[status]}
-              </option>
-            ))}
-          </select>
+      <form onSubmit={applyFilters} className="portal-card mb-5 grid gap-4 p-4 sm:grid-cols-2 xl:grid-cols-4">
+        <label className="portal-label xl:col-span-2">Busca
+          <span className="flex min-h-11 items-center gap-2 rounded-xl border border-white/10 bg-slate-950/50 px-3"><Search className="h-4 w-4 text-slate-500" /><input type="search" value={draftFilters.search} onChange={event => setDraftFilters(current => ({ ...current, search: event.target.value }))} placeholder="Número exato ou título" className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none" /></span>
         </label>
-      </div>
+        <label className="portal-label">Status<select value={draftFilters.status} onChange={event => setDraftFilters(current => ({ ...current, status: event.target.value as DraftFilters['status'] }))} className="portal-field"><option value="">Todos</option>{ticketStatuses.map(status => <option key={status} value={status}>{ticketStatusLabels[status]}</option>)}</select></label>
+        <label className="portal-label">Prioridade<select value={draftFilters.priority} onChange={event => setDraftFilters(current => ({ ...current, priority: event.target.value as DraftFilters['priority'] }))} className="portal-field"><option value="">Todas</option>{ticketPriorities.map(priority => <option key={priority} value={priority}>{ticketPriorityLabels[priority]}</option>)}</select></label>
+        <label className="portal-label">Categoria<select value={draftFilters.category} onChange={event => setDraftFilters(current => ({ ...current, category: event.target.value as DraftFilters['category'] }))} className="portal-field"><option value="">Todas</option>{ticketCategories.map(category => <option key={category} value={category}>{ticketCategoryLabels[category]}</option>)}</select></label>
+        <label className="portal-label">Condomínio<select value={draftFilters.condominiumId} onChange={event => setDraftFilters(current => ({ ...current, condominiumId: event.target.value }))} className="portal-field"><option value="">Todos permitidos</option>{availableCondominiums.map(condominium => <option key={condominium.id} value={condominium.id}>{condominium.name}</option>)}</select></label>
+        <label className="portal-label">Responsável<select value={draftFilters.assignedTo} onChange={event => setDraftFilters(current => ({ ...current, assignedTo: event.target.value }))} className="portal-field"><option value="">Todos</option><option value="unassigned">Não atribuído</option>{adminProfiles.map(profile => <option key={profile.id} value={profile.id}>{profile.full_name ?? profile.email ?? 'Administrador'}</option>)}</select></label>
+        <div className="flex items-end"><button type="submit" disabled={loading} className="portal-button portal-button-primary w-full">Aplicar filtros</button></div>
+      </form>
+
+      <p className="mb-4 text-sm text-slate-400">{total} {total === 1 ? 'chamado encontrado' : 'chamados encontrados'}</p>
 
       {loading ? (
         <LoadingState />
       ) : error ? (
         <ErrorState message={error} retry={() => void loadTickets()} />
-      ) : filteredTickets.length === 0 ? (
-        <EmptyState
-          title={
-            tickets.length === 0
-              ? 'Nenhum chamado encontrado.'
-              : 'Nenhum chamado possui este status.'
-          }
-        >
-          {tickets.length === 0
-            ? 'Use “Novo chamado” para registrar sua primeira solicitação.'
-            : 'Selecione outro status para ver os demais chamados.'}
-        </EmptyState>
+      ) : tickets.length === 0 ? (
+        <EmptyState title="Nenhum chamado corresponde aos filtros.">Ajuste os filtros ou use “Novo chamado” para registrar uma solicitação.</EmptyState>
       ) : (
-        <TicketList
-          tickets={filteredTickets}
-          onSelect={ticket => setSelectedTicketId(ticket.id)}
-        />
+        <><TicketList tickets={tickets} onSelect={ticket => setSelectedTicketId(ticket.id)} /><Pagination page={page} pageSize={PAGE_SIZE} total={total} disabled={loading} onPageChange={setPage} /></>
       )}
 
       <NewTicketModal

@@ -24,8 +24,12 @@ export default defineConfig({
       reportsDirectory: `${projectRoot}coverage`,
       include: [
         'src/lib/format.ts',
+        'src/lib/listing.ts',
         'src/lib/supabase/errors.ts',
+        'src/features/auth/actions.ts',
         'src/features/auth/AuthProvider.tsx',
+        'src/features/condominiums/actions.ts',
+        'src/features/condominiums/validation.ts',
         'src/features/registrations/labels.ts',
         'src/features/tickets/errors.ts',
         'src/components/portal/{Modal,PageHeader,PortalStates,StatusBadge}.tsx',

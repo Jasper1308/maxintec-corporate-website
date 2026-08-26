@@ -19,7 +19,7 @@ export const residentTypeLabels = {
 } satisfies Record<ResidentType, string>;
 
 export function getCondominiumName(
-  registration: Registration
+  registration: Pick<Registration, 'condominium' | 'condominio'>
 ): string {
   return (
     registration.condominium?.name ??

@@ -41,6 +41,8 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
     latestRegistrationResult,
     totalTicketsResult,
     openTicketsResult,
+    urgentTicketsResult,
+    unassignedTicketsResult,
     resolvedTicketsResult,
     activeCondominiumsResult,
     unreadNotificationsResult,
@@ -68,6 +70,16 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
     supabase
       .from('tickets')
       .select('id', { count: 'exact', head: true })
+      .in('status', ['open', 'in_progress', 'waiting']),
+    supabase
+      .from('tickets')
+      .select('id', { count: 'exact', head: true })
+      .eq('priority', 'urgent')
+      .in('status', ['open', 'in_progress', 'waiting']),
+    supabase
+      .from('tickets')
+      .select('id', { count: 'exact', head: true })
+      .is('assigned_to', null)
       .in('status', ['open', 'in_progress', 'waiting']),
     supabase
       .from('tickets')
@@ -107,6 +119,8 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
     ),
     totalTickets: readCount('chamados', totalTicketsResult),
     openTickets: readCount('chamados abertos', openTicketsResult),
+    urgentTickets: readCount('chamados urgentes', urgentTicketsResult),
+    unassignedTickets: readCount('chamados sem responsável', unassignedTicketsResult),
     resolvedTickets: readCount('chamados resolvidos', resolvedTicketsResult),
     activeCondominiums: readCount(
       'condomínios ativos',

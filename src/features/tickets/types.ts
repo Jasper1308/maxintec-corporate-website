@@ -79,6 +79,17 @@ export interface CreateTicketInput {
   description: string;
 }
 
+export interface TicketListFilters {
+  page: number;
+  pageSize: number;
+  search?: string;
+  status?: TicketStatus;
+  priority?: TicketPriority;
+  category?: TicketCategory;
+  condominiumId?: string;
+  assignedTo?: string;
+}
+
 export const ticketStatusLabels: Record<TicketStatus, string> = {
   open: 'Aberto',
   in_progress: 'Em andamento',

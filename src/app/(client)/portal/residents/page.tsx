@@ -1,248 +1,125 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-
 import { Search } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 
 import { PageHeader } from '@/components/portal/PageHeader';
-import {
-  AccessDenied,
-  EmptyState,
-  ErrorState,
-  LoadingState,
-} from '@/components/portal/PortalStates';
+import { Pagination } from '@/components/portal/Pagination';
+import { AccessDenied, EmptyState, ErrorState, LoadingState } from '@/components/portal/PortalStates';
+import { StatusBadge } from '@/components/portal/StatusBadge';
 import { useAuth } from '@/features/auth/AuthProvider';
-import {
-  getCondominiumName,
-  residentTypeLabels,
-} from '@/features/registrations/labels';
-import { getApprovedResidents } from '@/features/registrations/queries';
-import type { Registration } from '@/features/registrations/types';
+import { getCondominiumBlocks, getCondominiums } from '@/features/condominiums/queries';
+import type { CondominiumBlock, CondominiumListItem } from '@/features/condominiums/types';
+import { ResidentDetailsModal } from '@/features/registrations/components/ResidentDetailsModal';
+import { getCondominiumName, residentTypeLabels } from '@/features/registrations/labels';
+import { getApprovedResidentsPage } from '@/features/registrations/queries';
+import type { ResidentListItem } from '@/features/registrations/types';
 import { formatDate } from '@/lib/format';
 
-function normalizeSearch(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase('pt-BR')
-    .trim();
-}
+const PAGE_SIZE = 25;
 
-function getUnit(registration: Registration): string {
-  return [registration.bloco, registration.apartamento]
-    .filter(Boolean)
-    .join(' · ');
+function getUnit(registration: ResidentListItem): string {
+  return [registration.bloco, registration.apartamento].filter(Boolean).join(' · ');
 }
 
 export default function ResidentsPage() {
   const { isManager, loading: identityLoading } = useAuth();
-  const [residents, setResidents] = useState<Registration[]>([]);
-  const [search, setSearch] = useState('');
+  const [residents, setResidents] = useState<ResidentListItem[]>([]);
+  const [condominiums, setCondominiums] = useState<CondominiumListItem[]>([]);
+  const [blocks, setBlocks] = useState<CondominiumBlock[]>([]);
+  const [draftSearch, setDraftSearch] = useState('');
+  const [draftCondominium, setDraftCondominium] = useState('');
+  const [draftBlock, setDraftBlock] = useState('');
+  const [filters, setFilters] = useState({ search: '', condominiumId: '', block: '' });
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadResidents = useCallback(async () => {
     setLoading(true);
     setError(null);
-
     try {
-      setResidents(await getApprovedResidents());
+      const result = await getApprovedResidentsPage({ page, pageSize: PAGE_SIZE, ...filters });
+      setResidents(result.items);
+      setTotal(result.total);
     } catch (queryError) {
-      console.error(
-        'Não foi possível carregar os moradores aprovados:',
-        queryError
-      );
-      setError(
-        'Não foi possível carregar os moradores. Tente novamente em instantes.'
-      );
+      console.error('Failed to load approved residents:', queryError);
+      setError('Não foi possível carregar os moradores. Tente novamente em instantes.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filters, page]);
 
   useEffect(() => {
-    if (identityLoading || !isManager) {
-      return;
-    }
+    if (identityLoading || !isManager) return;
+    const timeoutId = window.setTimeout(() => void loadResidents(), 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [identityLoading, isManager, loadResidents]);
 
+  useEffect(() => {
+    if (identityLoading || !isManager) return;
     let active = true;
-
-    getApprovedResidents()
-      .then(data => {
-        if (active) {
-          setResidents(data);
-        }
+    void getCondominiums()
+      .then(async available => {
+        const availableBlocks = await getCondominiumBlocks(available.map(item => item.id));
+        if (active) { setCondominiums(available); setBlocks(availableBlocks); }
       })
-      .catch(queryError => {
-        console.error(
-          'Não foi possível carregar os moradores aprovados:',
-          queryError
-        );
-
-        if (active) {
-          setError(
-            'Não foi possível carregar os moradores. Tente novamente em instantes.'
-          );
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      active = false;
-    };
+      .catch(reason => console.warn('Resident filters unavailable:', reason));
+    return () => { active = false; };
   }, [identityLoading, isManager]);
 
-  const filteredResidents = useMemo(() => {
-    const term = normalizeSearch(search);
+  const blockOptions = useMemo(
+    () => [...new Set(blocks.filter(block => !draftCondominium || block.condominium_id === draftCondominium).map(block => block.name))].sort((a, b) => a.localeCompare(b, 'pt-BR')),
+    [blocks, draftCondominium]
+  );
 
-    if (!term) {
-      return residents;
-    }
-
-    return residents.filter(registration => {
-      const searchableValues = [
-        registration.nome_completo,
-        getCondominiumName(registration),
-        registration.bloco,
-        registration.apartamento,
-        getUnit(registration),
-        registration.email,
-      ];
-
-      return searchableValues.some(value =>
-        normalizeSearch(value ?? '').includes(term)
-      );
-    });
-  }, [residents, search]);
-
-  if (identityLoading) {
-    return <LoadingState />;
+  function applyFilters(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPage(1);
+    setFilters({ search: draftSearch, condominiumId: draftCondominium, block: draftBlock });
   }
 
-  if (!isManager) {
-    return <AccessDenied />;
-  }
+  if (identityLoading) return <LoadingState />;
+  if (!isManager) return <AccessDenied />;
 
   return (
     <div className="mx-auto max-w-7xl">
-      <PageHeader
-        title="Moradores"
-        description="Consulte os moradores aprovados nos condomínios permitidos pelo seu acesso."
-      />
+      <PageHeader title="Moradores" description="Consulte cadastros aprovados no escopo permitido pela RLS." />
 
-      <label className="mb-5 flex min-h-11 max-w-xl items-center gap-3 rounded-xl border border-white/10 bg-slate-900/60 px-4 py-2.5 transition focus-within:border-blue-500 focus-within:ring-3 focus-within:ring-blue-500/10">
-        <Search className="h-4 w-4 shrink-0 text-slate-500" />
-        <span className="sr-only">Buscar moradores</span>
-        <input
-          type="search"
-          value={search}
-          onChange={event => setSearch(event.target.value)}
-          placeholder="Buscar por nome, condomínio, unidade ou e-mail"
-          className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
-        />
-      </label>
+      <form onSubmit={applyFilters} className="portal-card mb-5 grid gap-4 p-4 md:grid-cols-[minmax(14rem,2fr)_minmax(11rem,1fr)_minmax(10rem,1fr)_auto] md:items-end">
+        <label className="portal-label">Busca
+          <span className="flex min-h-11 items-center gap-2 rounded-xl border border-white/10 bg-slate-950/50 px-3"><Search className="h-4 w-4 text-slate-500" /><input type="search" value={draftSearch} onChange={event => setDraftSearch(event.target.value)} placeholder="Nome, e-mail ou unidade" className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none" /></span>
+        </label>
+        <label className="portal-label">Condomínio
+          <select value={draftCondominium} onChange={event => { setDraftCondominium(event.target.value); setDraftBlock(''); }} className="portal-field"><option value="">Todos permitidos</option>{condominiums.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select>
+        </label>
+        <label className="portal-label">Bloco / torre
+          <select value={draftBlock} onChange={event => setDraftBlock(event.target.value)} className="portal-field"><option value="">Todos</option>{blockOptions.map(block => <option key={block} value={block}>{block}</option>)}</select>
+        </label>
+        <button type="submit" disabled={loading} className="portal-button portal-button-primary">Aplicar filtros</button>
+      </form>
 
-      {error && (
-        <div className="mb-5">
-          <ErrorState message={error} retry={() => void loadResidents()} />
-        </div>
-      )}
-
-      {loading ? (
-        <LoadingState />
-      ) : error && residents.length === 0 ? null : residents.length === 0 ? (
-        <EmptyState title="Nenhum morador aprovado encontrado." />
-      ) : filteredResidents.length === 0 ? (
-        <EmptyState title="Nenhum morador corresponde à busca." />
-      ) : (
+      {error && <div className="mb-5"><ErrorState message={error} retry={() => void loadResidents()} /></div>}
+      {loading ? <LoadingState /> : residents.length === 0 ? <EmptyState title="Nenhum morador corresponde aos filtros." /> : (
         <>
-          <div className="space-y-3 md:hidden">
-            {filteredResidents.map(registration => (
-              <article
-                key={registration.id}
-                className="portal-card p-5"
-              >
-                <h2 className="font-semibold text-white">
-                  {registration.nome_completo}
-                </h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  {registration.email ?? 'E-mail não informado'}
-                </p>
-                <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  <div className="col-span-2">
-                    <dt className="text-xs text-slate-500">Condomínio</dt>
-                    <dd className="mt-1 text-slate-200">
-                      {getCondominiumName(registration)}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs text-slate-500">Unidade</dt>
-                    <dd className="mt-1 text-slate-200">
-                      {getUnit(registration)}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs text-slate-500">Tipo</dt>
-                    <dd className="mt-1 text-slate-200">
-                      {residentTypeLabels[registration.tipo_residente]}
-                    </dd>
-                  </div>
-                  <div className="col-span-2">
-                    <dt className="text-xs text-slate-500">Aprovado em</dt>
-                    <dd className="mt-1 text-slate-200">
-                      {formatDate(registration.approved_at)}
-                    </dd>
-                  </div>
-                </dl>
-              </article>
-            ))}
-          </div>
-
-          <div className="portal-table-shell hidden md:block">
-            <div className="overflow-x-auto">
-            <table className="portal-table min-w-[900px]">
-              <thead>
-                <tr>
-                  <th className="px-5 py-4 font-medium">Morador</th>
-                  <th className="px-5 py-4 font-medium">Condomínio</th>
-                  <th className="px-5 py-4 font-medium">Unidade</th>
-                  <th className="px-5 py-4 font-medium">Tipo</th>
-                  <th className="px-5 py-4 font-medium">Aprovado em</th>
+          <div className="portal-table-shell overflow-x-auto">
+            <table className="portal-table min-w-[980px]">
+              <thead><tr><th className="px-5 py-4">Morador</th><th className="px-5 py-4">Condomínio</th><th className="px-5 py-4">Unidade</th><th className="px-5 py-4">Tipo</th><th className="px-5 py-4">Status</th><th className="px-5 py-4">Aprovado em</th></tr></thead>
+              <tbody>{residents.map(registration => (
+                <tr key={registration.id} onClick={() => setSelectedId(registration.id)} className="cursor-pointer text-slate-300 transition hover:bg-white/[0.04]">
+                  <td className="px-5 py-4"><p className="font-medium text-white">{registration.nome_completo}</p><p className="mt-1 text-xs text-slate-500">{registration.email ?? 'E-mail não informado'}</p></td>
+                  <td className="px-5 py-4">{getCondominiumName(registration)}</td><td className="px-5 py-4">{getUnit(registration)}</td><td className="px-5 py-4">{residentTypeLabels[registration.tipo_residente]}</td>
+                  <td className="px-5 py-4"><StatusBadge value="approved" label="Aprovado" /></td><td className="px-5 py-4">{formatDate(registration.approved_at)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredResidents.map(registration => (
-                  <tr key={registration.id} className="text-slate-300">
-                    <td className="px-5 py-4">
-                      <p className="font-medium text-white">
-                        {registration.nome_completo}
-                      </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        {registration.email ?? 'E-mail não informado'}
-                      </p>
-                    </td>
-                    <td className="px-5 py-4">
-                      {getCondominiumName(registration)}
-                    </td>
-                    <td className="px-5 py-4">{getUnit(registration)}</td>
-                    <td className="px-5 py-4">
-                      {residentTypeLabels[registration.tipo_residente]}
-                    </td>
-                    <td className="px-5 py-4">
-                      {formatDate(registration.approved_at)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+              ))}</tbody>
             </table>
-            </div>
           </div>
+          <Pagination page={page} pageSize={PAGE_SIZE} total={total} disabled={loading} onPageChange={setPage} />
         </>
       )}
+      {selectedId && <ResidentDetailsModal key={selectedId} registrationId={selectedId} onClose={() => setSelectedId(null)} />}
     </div>
   );
 }

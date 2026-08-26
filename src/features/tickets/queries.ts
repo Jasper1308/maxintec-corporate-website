@@ -1,10 +1,12 @@
 import { supabase } from '@/lib/supabase/client';
+import { getPageRange, normalizeSearch, type PaginatedResult } from '@/lib/listing';
 
 import type {
   Ticket,
   TicketCondominium,
   TicketEvent,
   TicketProfile,
+  TicketListFilters,
 } from './types';
 
 type RawTicket = Omit<
@@ -93,7 +95,10 @@ export async function getTickets(): Promise<Ticket[]> {
     throw error;
   }
 
-  const tickets = (data ?? []) as unknown as RawTicket[];
+  return hydrateTickets((data ?? []) as unknown as RawTicket[]);
+}
+
+async function hydrateTickets(tickets: RawTicket[]): Promise<Ticket[]> {
   const condominiumIds = unique(
     tickets.map(ticket => ticket.condominium_id)
   );
@@ -114,6 +119,44 @@ export async function getTickets(): Promise<Ticket[]> {
       ? profiles.get(ticket.assigned_to) ?? null
       : null,
   }));
+}
+
+export async function getTicketsPage(
+  filters: TicketListFilters
+): Promise<PaginatedResult<Ticket>> {
+  const { from, to } = getPageRange(filters.page, filters.pageSize);
+  let query = supabase
+    .from('tickets')
+    .select(ticketColumns, { count: 'exact' });
+
+  const search = normalizeSearch(filters.search ?? '');
+  if (search) {
+    query = /^\d+$/.test(search)
+      ? query.or(`title.ilike.%${search}%,ticket_number.eq.${search}`)
+      : query.ilike('title', `%${search}%`);
+  }
+  if (filters.status) query = query.eq('status', filters.status);
+  if (filters.priority) query = query.eq('priority', filters.priority);
+  if (filters.category) query = query.eq('category', filters.category);
+  if (filters.condominiumId) {
+    query = query.eq('condominium_id', filters.condominiumId);
+  }
+  if (filters.assignedTo === 'unassigned') {
+    query = query.is('assigned_to', null);
+  } else if (filters.assignedTo) {
+    query = query.eq('assigned_to', filters.assignedTo);
+  }
+
+  const { data, error, count } = await query
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (error) throw error;
+
+  return {
+    items: await hydrateTickets((data ?? []) as unknown as RawTicket[]),
+    total: count ?? 0,
+  };
 }
 
 export async function getTicketEvents(

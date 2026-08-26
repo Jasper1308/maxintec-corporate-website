@@ -40,6 +40,9 @@ export const queryBuilderMock = {
   is: vi.fn(),
   order: vi.fn(),
   limit: vi.fn(),
+  range: vi.fn(),
+  ilike: vi.fn(),
+  or: vi.fn(),
   single: vi.fn(),
   maybeSingle: vi.fn(),
   then: vi.fn(
@@ -103,6 +106,9 @@ export function resetSupabaseMock() {
   queryBuilderMock.is.mockReturnValue(queryBuilderMock);
   queryBuilderMock.order.mockReturnValue(queryBuilderMock);
   queryBuilderMock.limit.mockReturnValue(queryBuilderMock);
+  queryBuilderMock.range.mockReturnValue(queryBuilderMock);
+  queryBuilderMock.ilike.mockReturnValue(queryBuilderMock);
+  queryBuilderMock.or.mockReturnValue(queryBuilderMock);
   queryBuilderMock.single.mockReturnValue(queryBuilderMock);
   queryBuilderMock.maybeSingle.mockReturnValue(queryBuilderMock);
 

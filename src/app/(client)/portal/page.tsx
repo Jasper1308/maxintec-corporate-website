@@ -102,6 +102,22 @@ export default function PortalPage() {
           />
 
           <DashboardMetricCard
+            title="Chamados urgentes"
+            value={metrics.urgentTickets}
+            description="Chamados urgentes ainda ativos no escopo permitido."
+            href="/portal/tickets"
+            icon={<Ticket className="h-5 w-5" />}
+          />
+
+          <DashboardMetricCard
+            title="Sem responsável"
+            value={metrics.unassignedTickets}
+            description="Chamados ativos que ainda não possuem responsável."
+            href="/portal/tickets"
+            icon={<Users className="h-5 w-5" />}
+          />
+
+          <DashboardMetricCard
             title="Condomínios ativos"
             value={metrics.activeCondominiums}
             description="Condomínios ativos que as políticas permitem visualizar."
